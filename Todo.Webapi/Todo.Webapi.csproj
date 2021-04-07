@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Todo.Domain\Todo.Domain.csproj" />
+    <ProjectReference Include="..\Todo.Contracts\Todo.Contracts.csproj" />
+    <ProjectReference Include="..\Todo.Framework\Todo.Framework.csproj" />
+    <ProjectReference Include="..\Todo.Projections\Todo.Projections.csproj" />
+    <ProjectReference Include="..\Todo.ReadModels\Todo.ReadModels.csproj" />
+  </ItemGroup>
+
+</Project>
