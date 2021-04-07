@@ -12,3 +12,5 @@ Where segregation means separation.
 - Projections (Event handlers)
 - ReadModels
 - Query Controllers
+
+![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/assets/CQRS.png)
