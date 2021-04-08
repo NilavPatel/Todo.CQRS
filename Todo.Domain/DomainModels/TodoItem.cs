@@ -40,6 +40,26 @@ namespace Todo.Domain.DomainModels
             ApplyEvent(@event);
         }
 
+        public void MarkTodoItemAsUnComplete()
+        {
+            if (!this.IsComplete)
+            {
+                throw new Exception("Todo item is already marked as uncomplete");
+            }
+            var @event = new TodoItemMarkedAsUnComplete();
+            ApplyEvent(@event);
+        }
+
+        public void UpdateTodoItemTitle(string title)
+        {
+            if (this.Title == title)
+            {
+                return;
+            }
+            var @event = new TodoItemTitleUpdated() { Title = title };
+            ApplyEvent(@event);
+        }
+
         public void When(TodoItemCreated @event)
         {
             this.Id = @event.Id;
@@ -50,6 +70,16 @@ namespace Todo.Domain.DomainModels
         public void When(TodoItemMarkedAsComplete @event)
         {
             this.IsComplete = true;
+        }
+
+        public void When(TodoItemMarkedAsUnComplete @event)
+        {
+            this.IsComplete = false;
+        }
+
+        public void When(TodoItemTitleUpdated @event)
+        {
+            this.Title = @event.Title;
         }
     }
 }

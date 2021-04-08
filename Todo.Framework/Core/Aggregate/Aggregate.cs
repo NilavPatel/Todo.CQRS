@@ -46,9 +46,5 @@ namespace Todo.Framework.Core.Aggregate
                 Version++;
             }
         }
-
-        protected virtual void When(IEvent @event)
-        {
-        }
     }
 }

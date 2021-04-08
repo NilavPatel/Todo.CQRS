@@ -12,6 +12,13 @@ namespace Todo.Contracts.Events
     }
 
     public class TodoItemMarkedAsComplete : Event
+    { }
+
+    public class TodoItemMarkedAsUnComplete : Event
+    { }
+
+    public class TodoItemTitleUpdated : Event
     {
+        public string Title { get; set; }
     }
 }

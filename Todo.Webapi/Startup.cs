@@ -84,12 +84,16 @@ namespace Todo.Webapi
         {
             services.AddScoped<ICommandHandler<CreateTodoItem>, TodoItemHandler>();
             services.AddScoped<ICommandHandler<MarkTodoItemAsComplete>, TodoItemHandler>();
+            services.AddScoped<ICommandHandler<MarkTodoItemAsUnComplete>, TodoItemHandler>();
+            services.AddScoped<ICommandHandler<UpdateTodoItemTitle>, TodoItemHandler>();
         }
 
         private void RegisterEventHandlers(IServiceCollection services)
         {
             services.AddScoped<IEventHandler<TodoItemCreated>, TodoItemProjection>();
             services.AddScoped<IEventHandler<TodoItemMarkedAsComplete>, TodoItemProjection>();
+            services.AddScoped<IEventHandler<TodoItemMarkedAsUnComplete>, TodoItemProjection>();
+            services.AddScoped<IEventHandler<TodoItemTitleUpdated>, TodoItemProjection>();
         }
     }
 }

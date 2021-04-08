@@ -20,7 +20,12 @@ namespace Todo.Framework.Core.Repository
 
         public T Get<T>(Guid aggregateId) where T : IAggregateRoot
         {
-            return LoadAggregate<T>(aggregateId);
+            return LoadAggregate<T>(aggregateId, Int32.MaxValue);
+        }
+
+        public T Get<T>(Guid aggregateId, int version) where T : IAggregateRoot
+        {
+            return LoadAggregate<T>(aggregateId, version);
         }
 
         public void Save<T>(T aggregate) where T : IAggregateRoot
@@ -43,10 +48,15 @@ namespace Todo.Framework.Core.Repository
             _dbContext.SaveChanges();
         }
 
-        private T LoadAggregate<T>(Guid id) where T : IAggregateRoot
+        private T LoadAggregate<T>(Guid id, int version) where T : IAggregateRoot
         {
+            if (version <= 0)
+            {
+                throw new Exception("Aggregate version should not be less then or equal to 0");
+            }
+
             var events = _dbContext.Set<EventEntity>()
-                                .Where(e => e.AggregateId == id)
+                                .Where(e => e.AggregateId == id && e.AggregateVersion <= version)
                                 .OrderBy(e => e.AggregateVersion)
                                 .Select(e => TransformEvent(e))
                                 .ToList();
@@ -60,12 +70,14 @@ namespace Todo.Framework.Core.Repository
             aggregate.LoadFromHistory((IEnumerable<IEvent>)events);
             return aggregate;
         }
+
         private static IEvent TransformEvent(EventEntity eventSelected)
         {
             var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(eventSelected.Data), _jsonSerializerSettings);
             var evt = o as IEvent;
             return evt;
         }
+
         private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
         {
             TypeNameHandling = TypeNameHandling.All,

@@ -7,7 +7,9 @@ namespace Todo.Projections
 {
     public class TodoItemProjection :
         IEventHandler<TodoItemCreated>,
-        IEventHandler<TodoItemMarkedAsComplete>
+        IEventHandler<TodoItemMarkedAsComplete>,
+        IEventHandler<TodoItemMarkedAsUnComplete>,
+        IEventHandler<TodoItemTitleUpdated>
     {
         private IBaseRepository<TodoContext, TodoItem> _todoItemRepository;
 
@@ -32,6 +34,22 @@ namespace Todo.Projections
         {
             var todoItem = _todoItemRepository.GetById(@event.SourceId);
             todoItem.IsComplete = true;
+            todoItem.Version = @event.Version;
+            this._todoItemRepository.Update(todoItem);
+        }
+
+        public void Handle(TodoItemMarkedAsUnComplete @event)
+        {
+            var todoItem = _todoItemRepository.GetById(@event.SourceId);
+            todoItem.IsComplete = false;
+            todoItem.Version = @event.Version;
+            this._todoItemRepository.Update(todoItem);
+        }
+
+        public void Handle(TodoItemTitleUpdated @event)
+        {
+            var todoItem = _todoItemRepository.GetById(@event.SourceId);
+            todoItem.Title = @event.Title;
             todoItem.Version = @event.Version;
             this._todoItemRepository.Update(todoItem);
         }

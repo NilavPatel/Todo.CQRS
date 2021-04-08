@@ -22,5 +22,13 @@ namespace Todo.Webapi.Controllers
         {
             return this._todoItemRepository.ListAll();
         }
+
+        [Route("GetCompletedTodoItems")]
+        [HttpGet]
+        public IEnumerable<TodoItem> GetCompletedTodoItems()
+        {
+            var spec = new BaseSpecification<TodoItem>(t => t.IsComplete == true);
+            return this._todoItemRepository.List(spec);
+        }
     }
 }

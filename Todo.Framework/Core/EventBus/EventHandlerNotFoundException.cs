@@ -6,8 +6,6 @@ namespace Todo.Framework.Core.Event
     {
         public EventHandlerNotFoundException(Type eventPublisherType)
         : base(string.Format("Event handler not found for event {0}.", eventPublisherType.Name))
-        {
-
-        }
+        { }
     }
 }

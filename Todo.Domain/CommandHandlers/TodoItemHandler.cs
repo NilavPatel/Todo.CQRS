@@ -10,11 +10,13 @@ namespace Todo.Domain.CommandHandlers
 {
     public class TodoItemHandler : AggregateHandler,
         ICommandHandler<CreateTodoItem>,
-        ICommandHandler<MarkTodoItemAsComplete>
+        ICommandHandler<MarkTodoItemAsComplete>,
+        ICommandHandler<MarkTodoItemAsUnComplete>,
+        ICommandHandler<UpdateTodoItemTitle>
     {
         private IAggregateRepository _aggregateRepository;
         public TodoItemHandler(ICommandBus bus, IAggregateRepository aggregateRepository) :
-            base(bus, aggregateRepository)
+            base(bus)
         {
             this._aggregateRepository = aggregateRepository;
         }
@@ -29,6 +31,20 @@ namespace Todo.Domain.CommandHandlers
         {
             var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id);
             todoItem.MarkTodoItemAsComplete();
+            return HandleCommand(todoItem);
+        }
+
+        public ICommandResult Handle(MarkTodoItemAsUnComplete command)
+        {
+            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id);
+            todoItem.MarkTodoItemAsUnComplete();
+            return HandleCommand(todoItem);
+        }
+
+        public ICommandResult Handle(UpdateTodoItemTitle command)
+        {
+            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id);
+            todoItem.UpdateTodoItemTitle(command.Title);
             return HandleCommand(todoItem);
         }
     }
