@@ -29,21 +29,21 @@ namespace Todo.Domain.CommandHandlers
 
         public ICommandResult Handle(MarkTodoItemAsComplete command)
         {
-            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id);
+            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
             todoItem.MarkTodoItemAsComplete();
             return HandleCommand(todoItem);
         }
 
         public ICommandResult Handle(MarkTodoItemAsUnComplete command)
         {
-            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id);
+            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
             todoItem.MarkTodoItemAsUnComplete();
             return HandleCommand(todoItem);
         }
 
         public ICommandResult Handle(UpdateTodoItemTitle command)
         {
-            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id);
+            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
             todoItem.UpdateTodoItemTitle(command.Title);
             return HandleCommand(todoItem);
         }

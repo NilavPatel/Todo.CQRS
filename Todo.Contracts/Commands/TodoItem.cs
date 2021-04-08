@@ -12,16 +12,19 @@ namespace Todo.Contracts.Commands
     public class MarkTodoItemAsComplete : Command
     {
         public Guid Id { get; set; }
+        public int Version { get; set; }
     }
 
     public class MarkTodoItemAsUnComplete : Command
     {
         public Guid Id { get; set; }
+        public int Version { get; set; }
     }
 
     public class UpdateTodoItemTitle : Command
     {
         public Guid Id { get; set; }
+        public int Version { get; set; }
         public string Title { get; set; }
     }
 }

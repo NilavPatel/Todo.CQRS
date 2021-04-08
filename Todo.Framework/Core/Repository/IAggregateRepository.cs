@@ -7,8 +7,6 @@ namespace Todo.Framework.Core.Repository
     {
         void Save<T>(T aggregate) where T : IAggregateRoot;
 
-        T Get<T>(Guid aggregateId) where T : IAggregateRoot;
-
-        T Get<T>(Guid aggregateId, int version) where T : IAggregateRoot;
+        T Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot;
     }
 }

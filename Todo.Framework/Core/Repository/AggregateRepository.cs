@@ -18,14 +18,9 @@ namespace Todo.Framework.Core.Repository
             this._dbContext = dbContext;
         }
 
-        public T Get<T>(Guid aggregateId) where T : IAggregateRoot
+        public T Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
         {
-            return LoadAggregate<T>(aggregateId, Int32.MaxValue);
-        }
-
-        public T Get<T>(Guid aggregateId, int version) where T : IAggregateRoot
-        {
-            return LoadAggregate<T>(aggregateId, version);
+            return LoadAggregate<T>(aggregateId, aggregateVersion);
         }
 
         public void Save<T>(T aggregate) where T : IAggregateRoot
@@ -48,26 +43,30 @@ namespace Todo.Framework.Core.Repository
             _dbContext.SaveChanges();
         }
 
-        private T LoadAggregate<T>(Guid id, int version) where T : IAggregateRoot
+        private T LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
         {
-            if (version <= 0)
+            if (aggregateVersion <= 0)
             {
                 throw new Exception("Aggregate version should not be less then or equal to 0");
             }
 
             var events = _dbContext.Set<EventEntity>()
-                                .Where(e => e.AggregateId == id && e.AggregateVersion <= version)
+                                .Where(e => e.AggregateId == aggregateId)
                                 .OrderBy(e => e.AggregateVersion)
                                 .Select(e => TransformEvent(e))
                                 .ToList();
 
             if (!events.Any())
             {
-                throw new Exception($"Aggregate {id} of type {typeof(T).FullName} was not found");
+                throw new Exception($"Aggregate {aggregateId} of type {typeof(T).FullName} was not found");
             }
 
             var aggregate = AggregateFactory<T>.CreateAggregate();
             aggregate.LoadFromHistory((IEnumerable<IEvent>)events);
+            if (aggregateVersion != null && aggregate.Version != aggregateVersion)
+            {
+                throw new Exception($"A different version than expected was found in aggregate {aggregateId}");
+            }
             return aggregate;
         }
 
