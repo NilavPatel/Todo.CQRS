@@ -5,7 +5,7 @@ using Todo.Framework.Core.Event;
 
 namespace Todo.Framework.Core.Aggregate
 {
-    public class Aggregate : IAggregateRoot
+    public class Aggregate : IAggregate
     {
         private List<IEvent> _domainEvents;
         public IReadOnlyCollection<IEvent> DomainEvents => _domainEvents?.AsReadOnly();

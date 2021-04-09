@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
-using Todo.Framework.Core.Aggregate;
 using Todo.Framework.Core.Event;
 using Todo.Framework.Core.EventStore;
 
-namespace Todo.Framework.Core.Repository
+namespace Todo.Framework.Core.Aggregate
 {
     public class AggregateRepository : IAggregateRepository
     {
@@ -18,12 +17,12 @@ namespace Todo.Framework.Core.Repository
             this._dbContext = dbContext;
         }
 
-        public T Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
+        public T Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregate
         {
             return LoadAggregate<T>(aggregateId, aggregateVersion);
         }
 
-        public void Save<T>(T aggregate) where T : IAggregateRoot
+        public void Save<T>(T aggregate) where T : IAggregate
         {
             foreach (var e in aggregate.DomainEvents)
             {
@@ -43,7 +42,7 @@ namespace Todo.Framework.Core.Repository
             _dbContext.SaveChanges();
         }
 
-        private T LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
+        private T LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregate
         {
             if (aggregateVersion <= 0)
             {

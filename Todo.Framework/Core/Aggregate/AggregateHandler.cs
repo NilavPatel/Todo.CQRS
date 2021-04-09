@@ -12,7 +12,7 @@ namespace Todo.Framework.Core.Aggregate
             this._bus = bus;
         }
 
-        public ICommandResult HandleCommand(IAggregateRoot aggregate)
+        public ICommandResult HandleCommand(IAggregate aggregate)
         {
             return _bus.Submit(new SaveEvents() { Aggregate = aggregate });
         }

@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Todo.Contracts.Commands;
 using Todo.Contracts.Events;
 using Todo.Domain.CommandHandlers;
+using Todo.Framework.Core.Aggregate;
 using Todo.Framework.Core.Command;
 using Todo.Framework.Core.CommandBus;
 using Todo.Framework.Core.Event;

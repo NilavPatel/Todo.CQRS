@@ -4,7 +4,7 @@ using Todo.Framework.Core.Event;
 
 namespace Todo.Framework.Core.Aggregate
 {
-    public interface IAggregateRoot
+    public interface IAggregate
     {
         Guid Id { get; }
         int Version { get; }

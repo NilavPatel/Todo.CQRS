@@ -1,6 +1,8 @@
 /****** EventStore ******/
+USE [master]
 GO
-CREATE DATABASE EventStore;
+CREATE DATABASE [EventStore]
+GO
 USE [EventStore]
 GO
 CREATE TABLE [dbo].[Events](
@@ -15,7 +17,9 @@ CREATE TABLE [dbo].[Events](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 /****** Todo ******/
-CREATE DATABASE Todo;
+USE [master]
+Go
+CREATE DATABASE [Todo];
 GO
 USE [Todo]
 GO

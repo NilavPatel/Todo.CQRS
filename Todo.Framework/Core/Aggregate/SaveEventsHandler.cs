@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using Todo.Framework.Core.Command;
 using Todo.Framework.Core.CommandBus;
 using Todo.Framework.Core.Event;
-using Todo.Framework.Core.Repository;
 
-namespace Todo.Framework.Core.Command
+namespace Todo.Framework.Core.Aggregate
 {
     public class SaveEventsHandler : ICommandHandler<SaveEvents>
     {
