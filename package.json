@@ -1,0 +1,10 @@
+{
+    "name": "todo.cqrs",
+    "private": false,
+    "version": "1.0.0",
+    "scripts": {
+        "start": "dotnet run --project Todo.Webapi/Todo.Webapi.csproj",
+        "build": "dotnet build Todo.Webapi/Todo.Webapi.csproj",
+        "publish": "dotnet publish Todo.Webapi/Todo.Webapi.csproj"
+    }
+}
