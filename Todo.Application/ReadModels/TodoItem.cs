@@ -1,7 +1,7 @@
 using System;
 using Todo.Framework.Core.Repository;
 
-namespace Todo.ReadModels
+namespace Todo.Application.ReadModels
 {
     public class TodoItem : BaseEntity
     {

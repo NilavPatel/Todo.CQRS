@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Todo.Application.ReadModels;
 using Todo.Framework.Core.Repository;
-using Todo.ReadModels;
 
 namespace Todo.Webapi.Controllers
 {

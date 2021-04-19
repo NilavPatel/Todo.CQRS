@@ -4,18 +4,17 @@ using Todo.Domain.DomainModels;
 using Todo.Framework.Core.Aggregate;
 using Todo.Framework.Core.Command;
 using Todo.Framework.Core.CommandBus;
-using Todo.Framework.Core.Repository;
 
-namespace Todo.Domain.CommandHandlers
+namespace Todo.Application.CommandHanders
 {
-    public class TodoItemHandler : AggregateHandler,
+    public class TodoItemCommandHandler : AggregateHandler,
         ICommandHandler<CreateTodoItem>,
         ICommandHandler<MarkTodoItemAsComplete>,
         ICommandHandler<MarkTodoItemAsUnComplete>,
         ICommandHandler<UpdateTodoItemTitle>
     {
         private IAggregateRepository _aggregateRepository;
-        public TodoItemHandler(ICommandBus bus, IAggregateRepository aggregateRepository) :
+        public TodoItemCommandHandler(ICommandBus bus, IAggregateRepository aggregateRepository) :
             base(bus)
         {
             this._aggregateRepository = aggregateRepository;

@@ -5,17 +5,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Todo.Application.CommandHanders;
+using Todo.Application.EventHanders;
+using Todo.Application.ReadModels;
 using Todo.Contracts.Commands;
 using Todo.Contracts.Events;
-using Todo.Domain.CommandHandlers;
 using Todo.Framework.Core.Aggregate;
 using Todo.Framework.Core.Command;
 using Todo.Framework.Core.CommandBus;
 using Todo.Framework.Core.Event;
 using Todo.Framework.Core.EventStore;
 using Todo.Framework.Core.Repository;
-using Todo.Projections;
-using Todo.ReadModels;
 
 namespace Todo.Webapi
 {
@@ -83,18 +83,18 @@ namespace Todo.Webapi
 
         private void RegisterCommandHandlers(IServiceCollection services)
         {
-            services.AddScoped<ICommandHandler<CreateTodoItem>, TodoItemHandler>();
-            services.AddScoped<ICommandHandler<MarkTodoItemAsComplete>, TodoItemHandler>();
-            services.AddScoped<ICommandHandler<MarkTodoItemAsUnComplete>, TodoItemHandler>();
-            services.AddScoped<ICommandHandler<UpdateTodoItemTitle>, TodoItemHandler>();
+            services.AddScoped<ICommandHandler<CreateTodoItem>, TodoItemCommandHandler>();
+            services.AddScoped<ICommandHandler<MarkTodoItemAsComplete>, TodoItemCommandHandler>();
+            services.AddScoped<ICommandHandler<MarkTodoItemAsUnComplete>, TodoItemCommandHandler>();
+            services.AddScoped<ICommandHandler<UpdateTodoItemTitle>, TodoItemCommandHandler>();
         }
 
         private void RegisterEventHandlers(IServiceCollection services)
         {
-            services.AddScoped<IEventHandler<TodoItemCreated>, TodoItemProjection>();
-            services.AddScoped<IEventHandler<TodoItemMarkedAsComplete>, TodoItemProjection>();
-            services.AddScoped<IEventHandler<TodoItemMarkedAsUnComplete>, TodoItemProjection>();
-            services.AddScoped<IEventHandler<TodoItemTitleUpdated>, TodoItemProjection>();
+            services.AddScoped<IEventHandler<TodoItemCreated>, TodoItemEventHandler>();
+            services.AddScoped<IEventHandler<TodoItemMarkedAsComplete>, TodoItemEventHandler>();
+            services.AddScoped<IEventHandler<TodoItemMarkedAsUnComplete>, TodoItemEventHandler>();
+            services.AddScoped<IEventHandler<TodoItemTitleUpdated>, TodoItemEventHandler>();
         }
     }
 }

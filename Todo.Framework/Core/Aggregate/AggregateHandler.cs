@@ -1,5 +1,3 @@
-using System;
-using Todo.Framework.Core.Command;
 using Todo.Framework.Core.CommandBus;
 
 namespace Todo.Framework.Core.Aggregate

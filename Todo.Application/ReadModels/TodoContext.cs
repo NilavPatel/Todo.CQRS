@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Todo.ReadModels
+namespace Todo.Application.ReadModels
 {
     public class TodoContext : DbContext
     {

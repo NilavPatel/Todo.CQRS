@@ -1,11 +1,11 @@
+using Todo.Application.ReadModels;
 using Todo.Contracts.Events;
 using Todo.Framework.Core.Event;
 using Todo.Framework.Core.Repository;
-using Todo.ReadModels;
 
-namespace Todo.Projections
+namespace Todo.Application.EventHanders
 {
-    public class TodoItemProjection :
+    public class TodoItemEventHandler :
         IEventHandler<TodoItemCreated>,
         IEventHandler<TodoItemMarkedAsComplete>,
         IEventHandler<TodoItemMarkedAsUnComplete>,
@@ -13,7 +13,7 @@ namespace Todo.Projections
     {
         private IBaseRepository<TodoContext, TodoItem> _todoItemRepository;
 
-        public TodoItemProjection(IBaseRepository<TodoContext, TodoItem> todoItemRepository)
+        public TodoItemEventHandler(IBaseRepository<TodoContext, TodoItem> todoItemRepository)
         {
             this._todoItemRepository = todoItemRepository;
         }

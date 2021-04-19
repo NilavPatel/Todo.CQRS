@@ -3,13 +3,13 @@ using Todo.Contracts.Commands;
 using Todo.Framework.Core;
 using Todo.Framework.Core.CommandBus;
 
-namespace Todo.Webapi.Controllers
+namespace Todo.Webapi.CommandControllers
 {
     [Route("api/TodoItem")]
     [ApiController]
-    public class TodoItemController : BaseController
+    public class TodoItemCommandController : BaseController
     {
-        public TodoItemController(ICommandBus bus) : base(bus)
+        public TodoItemCommandController(ICommandBus bus) : base(bus)
         { }
 
         [Route("CreateTodoItem")]
