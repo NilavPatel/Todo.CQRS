@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Todo.Contracts.Commands;
 using Todo.Domain.DomainModels;
 using Todo.Framework.Core.Aggregate;
@@ -20,31 +21,31 @@ namespace Todo.Application.CommandHanders
             this._aggregateRepository = aggregateRepository;
         }
 
-        public ICommandResult Handle(CreateTodoItem createTodo)
+        public async Task<ICommandResult> Handle(CreateTodoItem createTodo)
         {
             var todoItem = new TodoItem(Guid.NewGuid(), createTodo.Title, createTodo.IsComplete);
-            return HandleCommand(todoItem);
+            return await HandleCommand(todoItem);
         }
 
-        public ICommandResult Handle(MarkTodoItemAsComplete command)
+        public async Task<ICommandResult> Handle(MarkTodoItemAsComplete command)
         {
-            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
+            var todoItem = await this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
             todoItem.MarkTodoItemAsComplete();
-            return HandleCommand(todoItem);
+            return await HandleCommand(todoItem);
         }
 
-        public ICommandResult Handle(MarkTodoItemAsUnComplete command)
+        public async Task<ICommandResult> Handle(MarkTodoItemAsUnComplete command)
         {
-            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
+            var todoItem = await this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
             todoItem.MarkTodoItemAsUnComplete();
-            return HandleCommand(todoItem);
+            return await HandleCommand(todoItem);
         }
 
-        public ICommandResult Handle(UpdateTodoItemTitle command)
+        public async Task<ICommandResult> Handle(UpdateTodoItemTitle command)
         {
-            var todoItem = this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
+            var todoItem = await this._aggregateRepository.Get<TodoItem>(command.Id, command.Version);
             todoItem.UpdateTodoItemTitle(command.Title);
-            return HandleCommand(todoItem);
+            return await HandleCommand(todoItem);
         }
     }
 }

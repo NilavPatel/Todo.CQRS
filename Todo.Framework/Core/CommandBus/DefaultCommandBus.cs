@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Todo.Framework.Core.Command;
 
 namespace Todo.Framework.Core.CommandBus
@@ -11,14 +12,14 @@ namespace Todo.Framework.Core.CommandBus
             _serviceProvider = serviceProvider;
         }
 
-        public ICommandResult Submit<TCommand>(TCommand command) where TCommand : ICommand
+        public async Task<ICommandResult> Submit<TCommand>(TCommand command) where TCommand : ICommand
         {
             var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>));
             if (handler == null)
             {
                 throw new CommandHandlerNotFoundException(typeof(TCommand));
             }
-            return ((ICommandHandler<TCommand>)handler).Handle(command);
+            return await ((ICommandHandler<TCommand>)handler).Handle(command);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Application.ReadModels;
 using Todo.Framework.Core.Repository;
@@ -18,17 +19,17 @@ namespace Todo.Webapi.Controllers
 
         [Route("GetTodoItems")]
         [HttpGet]
-        public IEnumerable<TodoItem> GetTodoItems()
+        public async Task<IEnumerable<TodoItem>> GetTodoItems()
         {
-            return this._todoItemRepository.ListAll();
+            return await this._todoItemRepository.ListAllAsync();
         }
 
         [Route("GetCompletedTodoItems")]
         [HttpGet]
-        public IEnumerable<TodoItem> GetCompletedTodoItems()
+        public async Task<IEnumerable<TodoItem>> GetCompletedTodoItems()
         {
             var spec = new BaseSpecification<TodoItem>(t => t.IsComplete == true);
-            return this._todoItemRepository.List(spec);
+            return await this._todoItemRepository.ListAsync(spec);
         }
     }
 }

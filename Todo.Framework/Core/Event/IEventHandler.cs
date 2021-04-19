@@ -1,7 +1,9 @@
-﻿namespace Todo.Framework.Core.Event
+﻿using System.Threading.Tasks;
+
+namespace Todo.Framework.Core.Event
 {
     public interface IEventHandler<in TEvent> where TEvent : IEvent
     {
-        void Handle(TEvent @event);
+        Task Handle(TEvent @event);
     }
 }

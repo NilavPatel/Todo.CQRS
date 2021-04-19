@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
 
 namespace Todo.Framework.Core.Repository
 {
@@ -14,49 +15,49 @@ namespace Todo.Framework.Core.Repository
             _dbContext = dbContext;
         }
 
-        public virtual T GetById(Guid id)
+        public async virtual Task<T> GetByIdAsync(Guid id)
         {
-            return _dbContext.Set<T>().Find(id);
+            return await _dbContext.Set<T>().FindAsync(id);
         }
 
-        public IReadOnlyList<T> ListAll()
+        public async Task<IReadOnlyList<T>> ListAllAsync()
         {
-            return _dbContext.Set<T>().ToList();
+            return await _dbContext.Set<T>().ToListAsync();
         }
 
-        public IReadOnlyList<T> List(ISpecification<T> spec)
+        public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
         {
-            return ApplySpecification(spec).ToList();
+            return await ApplySpecification(spec).ToListAsync();
         }
 
-        public T FirstOrDefault(ISpecification<T> spec)
+        public async Task<T> FirstOrDefaultAsync(ISpecification<T> spec)
         {
-            return ApplySpecification(spec).FirstOrDefault();
+            return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
 
-        public int Count(ISpecification<T> spec)
+        public async Task<int> CountAsync(ISpecification<T> spec)
         {
-            return ApplySpecification(spec).Count();
+            return await ApplySpecification(spec).CountAsync();
         }
 
-        public T Add(T entity)
+        public async Task<T> AddAsync(T entity)
         {
-            _dbContext.Set<T>().Add(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.Set<T>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
 
             return entity;
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)

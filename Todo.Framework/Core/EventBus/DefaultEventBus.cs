@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Todo.Framework.Core.Event
 {
@@ -12,7 +13,7 @@ namespace Todo.Framework.Core.Event
             _serviceProvider = serviceProvider;
         }
 
-        public void Publish<TEvent>(TEvent eve) where TEvent : IEvent
+        public async Task Publish<TEvent>(TEvent eve) where TEvent : IEvent
         {
             var type = typeof(IEventHandler<>).MakeGenericType(eve.GetType());
             var subscribers = _serviceProvider.GetServices(type);
@@ -22,7 +23,7 @@ namespace Todo.Framework.Core.Event
             }
             foreach (var subscriber in subscribers)
             {
-                ((dynamic)subscriber).Handle((dynamic)eve);
+                await ((dynamic)subscriber).Handle((dynamic)eve);
             }
         }
     }

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Todo.Framework.Core.Event;
 using Todo.Framework.Core.EventStore;
@@ -17,12 +19,12 @@ namespace Todo.Framework.Core.Aggregate
             this._dbContext = dbContext;
         }
 
-        public T Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregate
+        public async Task<T> Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregate
         {
-            return LoadAggregate<T>(aggregateId, aggregateVersion);
+            return await LoadAggregate<T>(aggregateId, aggregateVersion);
         }
 
-        public void Save<T>(T aggregate) where T : IAggregate
+        public async Task Save<T>(T aggregate) where T : IAggregate
         {
             foreach (var e in aggregate.DomainEvents)
             {
@@ -37,23 +39,23 @@ namespace Todo.Framework.Core.Aggregate
                     EventFullName = Encoding.UTF8.GetBytes(e.GetType().FullName),
                     TimeStamp = DateTimeOffset.UtcNow
                 };
-                _dbContext.Set<EventEntity>().Add(eventEntity);
+                await _dbContext.Set<EventEntity>().AddAsync(eventEntity);
             }
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        private T LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregate
+        private async Task<T> LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregate
         {
             if (aggregateVersion <= 0)
             {
                 throw new Exception("Aggregate version should not be less then or equal to 0");
             }
 
-            var events = _dbContext.Set<EventEntity>()
+            var events = await _dbContext.Set<EventEntity>()
                                 .Where(e => e.AggregateId == aggregateId)
                                 .OrderBy(e => e.AggregateVersion)
                                 .Select(e => TransformEvent(e))
-                                .ToList();
+                                .ToListAsync();
 
             if (!events.Any())
             {

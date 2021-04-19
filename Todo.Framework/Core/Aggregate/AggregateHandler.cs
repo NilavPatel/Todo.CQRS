@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Todo.Framework.Core.CommandBus;
 
 namespace Todo.Framework.Core.Aggregate
@@ -10,9 +11,9 @@ namespace Todo.Framework.Core.Aggregate
             this._bus = bus;
         }
 
-        public ICommandResult HandleCommand(IAggregate aggregate)
+        public async Task<ICommandResult> HandleCommand(IAggregate aggregate)
         {
-            return _bus.Submit(new SaveEvents() { Aggregate = aggregate });
+            return await _bus.Submit(new SaveEvents() { Aggregate = aggregate });
         }
     }
 }

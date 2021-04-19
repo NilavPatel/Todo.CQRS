@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Todo.Application.ReadModels;
 using Todo.Contracts.Events;
 using Todo.Framework.Core.Event;
@@ -18,7 +19,7 @@ namespace Todo.Application.EventHanders
             this._todoItemRepository = todoItemRepository;
         }
 
-        public void Handle(TodoItemCreated @event)
+        public async Task Handle(TodoItemCreated @event)
         {
             var todoItem = new TodoItem
             {
@@ -27,31 +28,31 @@ namespace Todo.Application.EventHanders
                 Title = @event.Title,
                 IsComplete = @event.IsComplete
             };
-            this._todoItemRepository.Add(todoItem);
+            await this._todoItemRepository.AddAsync(todoItem);
         }
 
-        public void Handle(TodoItemMarkedAsComplete @event)
+        public async Task Handle(TodoItemMarkedAsComplete @event)
         {
-            var todoItem = _todoItemRepository.GetById(@event.SourceId);
+            var todoItem = await _todoItemRepository.GetByIdAsync(@event.SourceId);
             todoItem.IsComplete = true;
             todoItem.Version = @event.Version;
-            this._todoItemRepository.Update(todoItem);
+            await this._todoItemRepository.UpdateAsync(todoItem);
         }
 
-        public void Handle(TodoItemMarkedAsUnComplete @event)
+        public async Task Handle(TodoItemMarkedAsUnComplete @event)
         {
-            var todoItem = _todoItemRepository.GetById(@event.SourceId);
+            var todoItem = await _todoItemRepository.GetByIdAsync(@event.SourceId);
             todoItem.IsComplete = false;
             todoItem.Version = @event.Version;
-            this._todoItemRepository.Update(todoItem);
+            await this._todoItemRepository.UpdateAsync(todoItem);
         }
 
-        public void Handle(TodoItemTitleUpdated @event)
+        public async Task Handle(TodoItemTitleUpdated @event)
         {
-            var todoItem = _todoItemRepository.GetById(@event.SourceId);
+            var todoItem = await _todoItemRepository.GetByIdAsync(@event.SourceId);
             todoItem.Title = @event.Title;
             todoItem.Version = @event.Version;
-            this._todoItemRepository.Update(todoItem);
+            await this._todoItemRepository.UpdateAsync(todoItem);
         }
     }
 }
