@@ -1,0 +1,201 @@
+{
+	"info": {
+		"_postman_id": "534905e5-d41a-4bb4-bfd6-5ad86ddfea52",
+		"name": "Todo.CQRS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5000/api/todoitem/CreateTodoItem",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Title\":\"asdasda dasa dasd as dadasd test\",\r\n    \"IsComplete\": false\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/todoitem/CreateTodoItem",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"todoitem",
+						"CreateTodoItem"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/todoitem/UpdateTodoItemTitle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\":\"20f901a1-ae21-4d92-9eda-eb671fd018ea\",\r\n    \"Title\":\"Updated title\",\r\n    \"Version\": 4\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/todoitem/UpdateTodoItemTitle",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"todoitem",
+						"UpdateTodoItemTitle"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/todoitem/MarkTodoItemAsComplete",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\":\"20f901a1-ae21-4d92-9eda-eb671fd018ea\",\r\n    \"Version\": 1\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/todoitem/MarkTodoItemAsComplete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"todoitem",
+						"MarkTodoItemAsComplete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/todoitem/MarkTodoItemAsUncomplete",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\":\"20f901a1-ae21-4d92-9eda-eb671fd018ea\",\r\n    \"Version\": 2\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/todoitem/MarkTodoItemAsUncomplete",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"todoitem",
+						"MarkTodoItemAsUncomplete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/TodoItem/GetTodoItems",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/TodoItem/GetTodoItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"TodoItem",
+						"GetTodoItems"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5000/api/TodoItem/GetCompletedTodoItems",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/TodoItem/GetCompletedTodoItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"TodoItem",
+						"GetCompletedTodoItems"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -5,7 +5,7 @@
     "scripts": {
         "start:Todo.Webapi": "dotnet run --project Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
         "build:Todo.Webapi": "dotnet build Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
-        "publish:Todo.Webapi": "dotnet publish Todo.Webapi/Todo.Webapi.csproj",
+        "publish:Todo.Webapi": "dotnet publish Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
         "clean": "dotnet clean",
         "restore": "dotnet restore"
     }
