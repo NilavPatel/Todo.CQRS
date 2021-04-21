@@ -1,6 +1,6 @@
 
 using System;
-using Todo.Framework.Core.Event;
+using Todo.Framework.Event;
 
 namespace Todo.Contracts.Events
 {

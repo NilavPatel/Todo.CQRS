@@ -1,6 +1,7 @@
 using System;
 using Todo.Contracts.Events;
-using Todo.Framework.Core.Aggregate;
+using Todo.Framework.Aggregate;
+using Todo.Framework.Exceptions;
 
 namespace Todo.Domain.DomainModels
 {
@@ -12,11 +13,11 @@ namespace Todo.Domain.DomainModels
         {
             if (title.Length == 0)
             {
-                throw new Exception("Title is required");
+                throw new DomainValidationException("Title is required");
             }
             if (title.Length > 50)
             {
-                throw new Exception("Title length should not be more than 50 characters");
+                throw new DomainValidationException("Title length should not be more than 50 characters");
             }
             var @event = new TodoItemCreated
             {
@@ -34,7 +35,7 @@ namespace Todo.Domain.DomainModels
         {
             if (this.IsComplete)
             {
-                throw new Exception("Todo item is already marked as complete");
+                throw new DomainValidationException("Todo item is already marked as complete");
             }
             var @event = new TodoItemMarkedAsComplete();
             ApplyEvent(@event);
@@ -44,7 +45,7 @@ namespace Todo.Domain.DomainModels
         {
             if (!this.IsComplete)
             {
-                throw new Exception("Todo item is already marked as uncomplete");
+                throw new DomainValidationException("Todo item is already marked as uncomplete");
             }
             var @event = new TodoItemMarkedAsUnComplete();
             ApplyEvent(@event);

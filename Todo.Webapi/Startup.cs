@@ -10,12 +10,12 @@ using Todo.Application.EventHanders;
 using Todo.Application.ReadModels;
 using Todo.Contracts.Commands;
 using Todo.Contracts.Events;
-using Todo.Framework.Core.Aggregate;
-using Todo.Framework.Core.Command;
-using Todo.Framework.Core.CommandBus;
-using Todo.Framework.Core.Event;
-using Todo.Framework.Core.EventStore;
-using Todo.Framework.Core.Repository;
+using Todo.Framework.Aggregate;
+using Todo.Framework.Command;
+using Todo.Framework.CommandBus;
+using Todo.Framework.Event;
+using Todo.Framework.EventStore;
+using Todo.Framework.Repository;
 
 namespace Todo.Webapi
 {
@@ -76,7 +76,7 @@ namespace Todo.Webapi
         {
             services.AddScoped<ICommandBus, DefaultCommandBus>();
             services.AddScoped<IEventBus, DefaultEventBus>();
-            services.AddScoped<ICommandHandler<SaveEvents>, SaveEventsHandler>();
+            services.AddScoped<ICommandHandler<SaveAggregateEvents>, SaveAggregateEventsCommandHandler>();
             services.AddScoped<IAggregateRepository, AggregateRepository>();
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
         }

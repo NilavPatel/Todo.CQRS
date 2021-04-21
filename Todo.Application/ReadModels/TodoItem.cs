@@ -1,5 +1,5 @@
 using System;
-using Todo.Framework.Core.Repository;
+using Todo.Framework.Repository;
 
 namespace Todo.Application.ReadModels
 {

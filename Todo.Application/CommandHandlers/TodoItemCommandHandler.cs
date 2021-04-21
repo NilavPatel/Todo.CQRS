@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Todo.Contracts.Commands;
 using Todo.Domain.DomainModels;
-using Todo.Framework.Core.Aggregate;
-using Todo.Framework.Core.Command;
-using Todo.Framework.Core.CommandBus;
+using Todo.Framework.Aggregate;
+using Todo.Framework.Command;
+using Todo.Framework.CommandBus;
 
 namespace Todo.Application.CommandHanders
 {

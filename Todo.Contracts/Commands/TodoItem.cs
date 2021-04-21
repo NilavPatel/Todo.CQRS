@@ -1,5 +1,5 @@
 using System;
-using Todo.Framework.Core.Command;
+using Todo.Framework.Command;
 
 namespace Todo.Contracts.Commands
 {

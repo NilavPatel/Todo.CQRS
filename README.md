@@ -15,6 +15,10 @@ This project contains basic understanding of how **CQRS + Event Sourcing** works
 - ReadModels
 - Query Controllers
 
+## Advanced Concepts (Not available in this Repository, will be added later)
+- Aggregate Snapshots
+- Aggregate Sessions for tracking
+
 ![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/assets/CQRS.png)
 
 Add :star: if this repository helps you.
