@@ -1,17 +1,20 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Contracts.Commands;
-using Framework.Generic;
 using Framework.CommandBus;
+using System;
 
 namespace Todo.Webapi.CommandControllers
 {
     [Route("api/TodoItem")]
     [ApiController]
-    public class TodoItemCommandController : BaseController
+    public class TodoItemCommandController : Controller
     {
-        public TodoItemCommandController(ICommandBus bus) : base(bus)
-        { }
+        public ICommandBus _bus;
+        public TodoItemCommandController(ICommandBus bus)
+        {
+            _bus = bus;
+        }
 
         [Route("CreateTodoItem")]
         [HttpPost]

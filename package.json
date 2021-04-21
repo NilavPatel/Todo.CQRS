@@ -3,9 +3,9 @@
     "private": false,
     "version": "1.0.0",
     "scripts": {
-        "start": "dotnet run --project Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
-        "build": "dotnet build Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
-        "publish": "dotnet publish Todo.Webapi/Todo.Webapi.csproj",
+        "start:Todo.Webapi": "dotnet run --project Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
+        "build:Todo.Webapi": "dotnet build Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
+        "publish:Todo.Webapi": "dotnet publish Todo.Webapi/Todo.Webapi.csproj",
         "clean": "dotnet clean",
         "restore": "dotnet restore"
     }

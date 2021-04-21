@@ -5,6 +5,7 @@ using Todo.Domain.DomainModels;
 using Framework.Aggregate;
 using Framework.Command;
 using Framework.CommandBus;
+using Framework.Event;
 
 namespace Todo.Application.CommandHanders
 {
@@ -15,8 +16,8 @@ namespace Todo.Application.CommandHanders
         ICommandHandler<UpdateTodoItemTitle>
     {
         private IAggregateRepository _aggregateRepository;
-        public TodoItemCommandHandler(ICommandBus bus, IAggregateRepository aggregateRepository) :
-            base(bus)
+        public TodoItemCommandHandler(IEventBus bus, IAggregateRepository aggregateRepository) :
+            base(bus, aggregateRepository)
         {
             this._aggregateRepository = aggregateRepository;
         }

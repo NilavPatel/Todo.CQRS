@@ -76,7 +76,6 @@ namespace Todo.Webapi
         {
             services.AddScoped<ICommandBus, DefaultCommandBus>();
             services.AddScoped<IEventBus, DefaultEventBus>();
-            services.AddScoped<ICommandHandler<SaveAggregateEvents>, SaveAggregateEventsCommandHandler>();
             services.AddScoped<IAggregateRepository, AggregateRepository>();
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
         }
