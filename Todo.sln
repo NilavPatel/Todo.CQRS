@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Webapi", "Todo.Webapi\Todo.Webapi.csproj", "{CCA7BBED-426B-4081-84CE-22F5BE3E1FA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Webapi", "Modules\Todo\Todo.Webapi\Todo.Webapi.csproj", "{CCA7BBED-426B-4081-84CE-22F5BE3E1FA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Domain", "Todo.Domain\Todo.Domain.csproj", "{71625B03-2609-43FF-9B57-C561D3839D14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Domain", "Modules\Todo\Todo.Domain\Todo.Domain.csproj", "{71625B03-2609-43FF-9B57-C561D3839D14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Contracts", "Todo.Contracts\Todo.Contracts.csproj", "{E7E38B3E-B432-416E-821F-30E4FB820BDD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Contracts", "Modules\Todo\Todo.Contracts\Todo.Contracts.csproj", "{E7E38B3E-B432-416E-821F-30E4FB820BDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Framework", "Todo.Framework\Todo.Framework.csproj", "{D53D92CA-4A2F-4B51-9DA5-57F64AE518FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Framework\Framework.csproj", "{D53D92CA-4A2F-4B51-9DA5-57F64AE518FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Application", "Todo.Application\Todo.Application.csproj", "{0CA21970-67F9-4361-9C55-F127139CD44B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Application", "Modules\Todo\Todo.Application\Todo.Application.csproj", "{0CA21970-67F9-4361-9C55-F127139CD44B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
