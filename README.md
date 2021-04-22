@@ -4,8 +4,8 @@ CQRS stands for "Command and Query Responsiblity Segregation"
 Where segregation means separation.
 ````
 
-This project contains basic understanding of how **CQRS + Event Sourcing** works togather.
-Add :star: if this repository helps you.
+This project contains basic understanding of how **CQRS + Event Sourcing** works togather.  
+Add :star: if this repository helps you.  
 
 ## Features
 - Commands and Handlers
@@ -15,5 +15,6 @@ Add :star: if this repository helps you.
 - Events and Handlers
 - ReadModels
 - Query Controllers
+- Command and Event handlers auto register
 
 ![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/assets/CQRS.png)

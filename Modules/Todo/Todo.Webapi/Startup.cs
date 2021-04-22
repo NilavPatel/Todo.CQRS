@@ -5,17 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Todo.Application.CommandHanders;
-using Todo.Application.EventHanders;
 using Todo.Application.ReadModels;
-using Todo.Contracts.Commands;
-using Todo.Contracts.Events;
-using Framework.Aggregate;
-using Framework.Command;
-using Framework.CommandBus;
-using Framework.Event;
-using Framework.EventStore;
-using Framework.Repository;
+using Framework.Registrar;
+using System.Reflection;
 
 namespace Todo.Webapi
 {
@@ -38,10 +30,12 @@ namespace Todo.Webapi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Todo.Webapi", Version = "v1" });
             });
 
-            RegisterDatabases(services);
-            RegisterRequiredServices(services);
-            RegisterCommandHandlers(services);
-            RegisterEventHandlers(services);
+            // Add event store db context and register command handler, event handler
+            var resgistrar = new ServiceRegistrar(services);
+            resgistrar.AddEventStoreDbContext(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=EventStore;User Id=sa;Password=satest12@;");
+            resgistrar.RegisterHandlers(Assembly.Load("Todo.Application"));
+
+            services.AddDbContext<TodoContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,36 +58,6 @@ namespace Todo.Webapi
             {
                 endpoints.MapControllers();
             });
-        }
-
-        public void RegisterDatabases(IServiceCollection services)
-        {
-            services.AddDbContext<EventStoreContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=EventStore;User Id=sa;Password=satest12@;"));
-            services.AddDbContext<TodoContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;"));
-        }
-
-        private void RegisterRequiredServices(IServiceCollection services)
-        {
-            services.AddScoped<ICommandBus, DefaultCommandBus>();
-            services.AddScoped<IEventBus, DefaultEventBus>();
-            services.AddScoped<IAggregateRepository, AggregateRepository>();
-            services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
-        }
-
-        private void RegisterCommandHandlers(IServiceCollection services)
-        {
-            services.AddScoped<ICommandHandler<CreateTodoItem>, TodoItemCommandHandler>();
-            services.AddScoped<ICommandHandler<MarkTodoItemAsComplete>, TodoItemCommandHandler>();
-            services.AddScoped<ICommandHandler<MarkTodoItemAsUnComplete>, TodoItemCommandHandler>();
-            services.AddScoped<ICommandHandler<UpdateTodoItemTitle>, TodoItemCommandHandler>();
-        }
-
-        private void RegisterEventHandlers(IServiceCollection services)
-        {
-            services.AddScoped<IEventHandler<TodoItemCreated>, TodoItemEventHandler>();
-            services.AddScoped<IEventHandler<TodoItemMarkedAsComplete>, TodoItemEventHandler>();
-            services.AddScoped<IEventHandler<TodoItemMarkedAsUnComplete>, TodoItemEventHandler>();
-            services.AddScoped<IEventHandler<TodoItemTitleUpdated>, TodoItemEventHandler>();
         }
     }
 }
