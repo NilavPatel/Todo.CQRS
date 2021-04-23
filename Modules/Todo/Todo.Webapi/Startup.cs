@@ -31,7 +31,7 @@ namespace Todo.Webapi
             });
 
             // Add event store db context and register command handler, event handler
-            var resgistrar = new ServiceRegistrar(services);
+            var resgistrar = new RegistrarService(services);
             resgistrar.AddEventStoreDbContext(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=EventStore;User Id=sa;Password=satest12@;");
             resgistrar.RegisterHandlers(Assembly.Load("Todo.Application"));
 

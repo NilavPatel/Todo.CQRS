@@ -12,11 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Framework.Registrar
 {
-    public class ServiceRegistrar
+    public class RegistrarService
     {
         private readonly IServiceCollection _services;
 
-        public ServiceRegistrar(IServiceCollection services)
+        public RegistrarService(IServiceCollection services)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             RegisterRequiredServices();
@@ -27,7 +27,7 @@ namespace Framework.Registrar
             _services.AddScoped<ICommandBus, DefaultCommandBus>();
             _services.AddScoped<IEventBus, DefaultEventBus>();
             _services.AddScoped<IAggregateRepository, AggregateRepository>();
-            IServiceCollection serviceCollection = _services.AddScoped(serviceType: typeof(IBaseRepository<,>), implementationType: typeof(BaseRepository<,>));
+            _services.AddScoped(serviceType: typeof(IBaseRepository<,>), implementationType: typeof(BaseRepository<,>));
         }
 
         public void AddEventStoreDbContext(string connectionString)
@@ -41,7 +41,7 @@ namespace Framework.Registrar
             RegisterEventHandlers(assembly);
         }
 
-        public void RegisterCommandHandlers(Assembly assembly)
+        private void RegisterCommandHandlers(Assembly assembly)
         {
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
@@ -58,7 +58,7 @@ namespace Framework.Registrar
             }
         }
 
-        public void RegisterEventHandlers(Assembly assembly)
+        private void RegisterEventHandlers(Assembly assembly)
         {
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
