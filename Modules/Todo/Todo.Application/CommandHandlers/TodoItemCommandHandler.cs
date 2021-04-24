@@ -6,6 +6,7 @@ using Framework.Aggregate;
 using Framework.Command;
 using Framework.CommandBus;
 using Framework.Event;
+using Framework.Generators;
 
 namespace Todo.Application.CommandHanders
 {
@@ -24,7 +25,7 @@ namespace Todo.Application.CommandHanders
 
         public async Task<ICommandResult> Handle(CreateTodoItem createTodo)
         {
-            var todoItem = new TodoItem(Guid.NewGuid(), createTodo.Title, createTodo.IsComplete);
+            var todoItem = new TodoItem(CombGuid.NewGuid(), createTodo.Title, createTodo.IsComplete);
             return await HandleCommand(todoItem);
         }
 

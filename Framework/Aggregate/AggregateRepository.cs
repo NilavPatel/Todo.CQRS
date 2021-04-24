@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Framework.Event;
 using Framework.EventStore;
 using Framework.Exceptions;
+using Framework.Generators;
 
 namespace Framework.Aggregate
 {
@@ -31,14 +32,13 @@ namespace Framework.Aggregate
             {
                 var eventEntity = new EventEntity
                 {
-                    Id = Guid.NewGuid(),
-                    AggregateName = aggregate.GetType().Name,
+                    Id = CombGuid.NewGuid(),
                     AggregateId = e.SourceId,
                     AggregateVersion = e.Version,
+                    AggregateName = aggregate.GetType().FullName,
+                    EventName = e.GetType().FullName,
                     Data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e, _jsonSerializerSettings)),
-                    EventName = e.GetType().Name,
-                    EventFullName = Encoding.UTF8.GetBytes(e.GetType().FullName),
-                    TimeStamp = DateTimeOffset.UtcNow
+                    OccuredOn = e.OccuredOn
                 };
                 await _dbContext.Set<EventEntity>().AddAsync(eventEntity);
             }
