@@ -25,6 +25,7 @@ namespace Framework.Aggregate
             {
                 await this._aggregateRepository.Save(aggregate);
                 await PublishEvents(aggregate.DomainEvents);
+                aggregate.ClearDomainEvents();
             }
             return new CommandResult(HttpStatusCode.OK, aggregate.Id, aggregate.Version, null);
         }

@@ -13,5 +13,7 @@ namespace Framework.Aggregate
         void ApplyEvent(IEvent @event);
 
         void LoadFromHistory(IEnumerable<IEvent> history);
+
+        void ClearDomainEvents();
     }
 }

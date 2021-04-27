@@ -47,5 +47,10 @@ namespace Framework.Aggregate
                 Version++;
             }
         }
+
+        public void ClearDomainEvents()
+        {
+            this._domainEvents.Clear();
+        }
     }
 }
