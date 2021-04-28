@@ -6,17 +6,13 @@ namespace Framework.CommandBus
 {
     public class CommandResult : ICommandResult
     {
-        public CommandResult(HttpStatusCode statusCode, Guid? aggregateId, int? aggregateVersion, IEnumerable<object> errors)
+        public CommandResult(HttpStatusCode statusCode, object data)
         {
             this.StatusCode = statusCode;
-            this.AggregateId = aggregateId;
-            this.AggregateVersion = aggregateVersion;
-            this.Errors = errors;
+            this.Data = data;
         }
 
         public HttpStatusCode StatusCode { get; set; }
-        public Guid? AggregateId { get; set; }
-        public int? AggregateVersion { get; set; }
-        public IEnumerable<object> Errors { get; set; }
+        public object Data { get; set; }
     }
 }

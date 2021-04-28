@@ -4,7 +4,7 @@ using Framework.Event;
 
 namespace Framework.Aggregate
 {
-    public interface IAggregate
+    public interface IAggregateRoot
     {
         Guid Id { get; }
         int Version { get; }

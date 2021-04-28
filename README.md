@@ -16,5 +16,5 @@ Add :star: if this repository helps you.
 - ReadModels
 - Query Controllers
 - Command and Event handlers auto register
-
-![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/assets/CQRS.png)
+- Unit of Work for aggregates
+- Class for sequential GUIDs (CombGuid.cs)

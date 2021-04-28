@@ -5,7 +5,7 @@ using Framework.Exceptions;
 
 namespace Todo.Domain.DomainModels
 {
-    public class TodoItem : Aggregate
+    public class TodoItem : AggregateRoot
     {
         private TodoItem()
         { }

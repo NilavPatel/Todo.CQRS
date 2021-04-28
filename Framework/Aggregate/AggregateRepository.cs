@@ -20,12 +20,12 @@ namespace Framework.Aggregate
             this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<T> Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregate
+        public async Task<T> Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
         {
             return await LoadAggregate<T>(aggregateId, aggregateVersion);
         }
 
-        public async Task Save<T>(T aggregate) where T : IAggregate
+        public async Task Save<T>(T aggregate) where T : IAggregateRoot
         {
             foreach (var e in aggregate.DomainEvents)
             {
@@ -44,7 +44,7 @@ namespace Framework.Aggregate
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task<T> LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregate
+        private async Task<T> LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
         {
             if (aggregateVersion <= 0)
             {
@@ -83,6 +83,5 @@ namespace Framework.Aggregate
             TypeNameHandling = TypeNameHandling.All,
             NullValueHandling = NullValueHandling.Ignore
         };
-
     }
 }

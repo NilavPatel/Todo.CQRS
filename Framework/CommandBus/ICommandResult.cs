@@ -7,8 +7,6 @@ namespace Framework.CommandBus
     public interface ICommandResult
     {
         HttpStatusCode StatusCode { get; set; }
-        Guid? AggregateId { get; set; }
-        int? AggregateVersion { get; set; }
-        IEnumerable<object> Errors { get; set; }
+        object Data { get; set; }
     }
 }

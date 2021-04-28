@@ -6,7 +6,7 @@ using Framework.Exceptions;
 
 namespace Framework.Aggregate
 {
-    public class Aggregate : IAggregate
+    public class AggregateRoot : IAggregateRoot
     {
         private List<IEvent> _domainEvents;
         public IReadOnlyCollection<IEvent> DomainEvents => _domainEvents?.AsReadOnly();
