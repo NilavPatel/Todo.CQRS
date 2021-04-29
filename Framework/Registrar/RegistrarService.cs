@@ -7,6 +7,7 @@ using Framework.CommandBus;
 using Framework.Event;
 using Framework.EventStore;
 using Framework.Repository;
+using Framework.Snapshotting;
 using Framework.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,7 @@ namespace Framework.Registrar
             _services.AddScoped<IEventBus, DefaultEventBus>();
             _services.AddScoped<IAggregateRepository, AggregateRepository>();
             _services.AddScoped<IUowRepository, UowRepository>();
+            _services.AddScoped<ISnapshotRepository, SnapshotRepository>();
             _services.AddScoped(serviceType: typeof(IBaseRepository<,>), implementationType: typeof(BaseRepository<,>));
         }
 

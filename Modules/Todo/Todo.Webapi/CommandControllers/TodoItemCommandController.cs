@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Todo.Contracts.Commands;
 using Framework.CommandBus;
-using System;
 
 namespace Todo.Webapi.CommandControllers
 {

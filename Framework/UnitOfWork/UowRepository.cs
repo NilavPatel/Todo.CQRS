@@ -79,6 +79,10 @@ namespace Framework.UnitOfWork
 
         private async Task PublishEvents(IReadOnlyCollection<IEvent> events)
         {
+            if (events == null)
+            {
+                return;
+            }
             foreach (var @event in events)
             {
                 await _bus.Publish(@event);

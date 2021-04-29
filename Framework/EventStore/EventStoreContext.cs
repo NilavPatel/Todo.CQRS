@@ -1,3 +1,4 @@
+using Framework.Snapshotting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Framework.EventStore
@@ -8,5 +9,6 @@ namespace Framework.EventStore
         { }
 
         public DbSet<EventEntity> Events { get; set; }
+        public DbSet<SnapShotEntity> SnapShots { get; set; }
     }
 }

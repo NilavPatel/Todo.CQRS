@@ -1,11 +1,11 @@
 using System;
 using Todo.Contracts.Events;
-using Framework.Aggregate;
 using Framework.Exceptions;
+using Framework.Snapshotting;
 
 namespace Todo.Domain.DomainModels
 {
-    public class TodoItem : AggregateRoot
+    public class TodoItem : SnapshotAggregateRoot<TodoItemSpanshot>
     {
         private TodoItem()
         { }
@@ -82,5 +82,26 @@ namespace Todo.Domain.DomainModels
         {
             this.Title = @event.Title;
         }
+
+        protected override TodoItemSpanshot CreateSnapshot()
+        {
+            return new TodoItemSpanshot()
+            {
+                Title = this.Title,
+                IsComplete = this.IsComplete
+            };
+        }
+
+        protected override void RestoreFromSnapshot(TodoItemSpanshot snapshot)
+        {
+            this.Title = snapshot.Title;
+            this.IsComplete = snapshot.IsComplete;
+        }
+    }
+
+    public class TodoItemSpanshot : Snapshot
+    {
+        public string Title { get; set; }
+        public bool IsComplete { get; set; }
     }
 }

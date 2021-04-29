@@ -50,6 +50,10 @@ namespace Framework.Aggregate
 
         public void ClearDomainEvents()
         {
+            if (this.DomainEvents == null)
+            {
+                return;
+            }
             this._domainEvents.Clear();
         }
     }
