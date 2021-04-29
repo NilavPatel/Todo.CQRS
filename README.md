@@ -26,4 +26,10 @@ Add :star: if this repository helps you.
 
 - Inherit domain model with `AggregateRoot` or `SnapshotAggregateRoot<Snapshot>`.
 - Domain model must have parameterless constructor with `private` access modifier.
+- Add `private` modifier to set of all properties in domain model.
+- Domain has no dependecies except Contracts.
+- All business logic and validation should be written in Domain models.
+- Contracts contains Command and Event classes, no business logic should be written in Contracts.
+- All database updates are done from `EventHandler` only.
+- `QueryController` is featching data from thin data layer.
 
