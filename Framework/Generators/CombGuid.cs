@@ -1,5 +1,4 @@
 using System;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Framework.Generators
 {

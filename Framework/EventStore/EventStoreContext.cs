@@ -1,4 +1,3 @@
-using Framework.Snapshotting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Framework.EventStore

@@ -68,10 +68,10 @@ namespace Framework.Aggregate
             if (snapshotVersion == -1)
             {
                 var events = await _dbContext.Set<EventEntity>()
-                                                .Where(e => e.AggregateId == aggregateId)
-                                                .OrderBy(e => e.AggregateVersion)
-                                                .Select(e => TransformEvent(e))
-                                                .ToListAsync();
+                                        .Where(e => e.AggregateId == aggregateId)
+                                        .OrderBy(e => e.AggregateVersion)
+                                        .Select(e => TransformEvent(e))
+                                        .ToListAsync();
 
                 if (!events.Any())
                 {
@@ -87,10 +87,10 @@ namespace Framework.Aggregate
             else
             {
                 var events = await _dbContext.Set<EventEntity>()
-                                                .Where(e => e.AggregateId == aggregateId && e.AggregateVersion > snapshotVersion)
-                                                .OrderBy(e => e.AggregateVersion)
-                                                .Select(e => TransformEvent(e))
-                                                .ToListAsync();
+                                        .Where(e => e.AggregateId == aggregateId && e.AggregateVersion > snapshotVersion)
+                                        .OrderBy(e => e.AggregateVersion)
+                                        .Select(e => TransformEvent(e))
+                                        .ToListAsync();
 
                 if (events.Any())
                 {

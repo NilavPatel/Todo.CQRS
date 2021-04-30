@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Framework.Snapshotting
+namespace Framework.EventStore
 {
     public class SnapShotEntity
     {

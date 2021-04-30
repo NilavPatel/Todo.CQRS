@@ -31,7 +31,7 @@ namespace Framework.Registrar
             _services.AddScoped<IAggregateRepository, AggregateRepository>();
             _services.AddScoped<IUowRepository, UowRepository>();
             _services.AddScoped<ISnapshotRepository, SnapshotRepository>();
-            _services.AddScoped(serviceType: typeof(IBaseRepository<,>), implementationType: typeof(BaseRepository<,>));
+            _services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
         }
 
         public void AddEventStoreDbContext(string connectionString)
