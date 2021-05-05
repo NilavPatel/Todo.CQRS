@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Framework.CommandBus;
 
-namespace Framework.Command
+namespace Framework.Commands
 {
     public interface ICommandHandler<in TCommand> where TCommand : ICommand
     {

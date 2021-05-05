@@ -1,11 +1,13 @@
-# CQRS + Event Sourcing + .NET 5.0
+# CQRS + ES + DDD + .NET 5.0
 
 ```
 CQRS stands for "Command and Query Responsiblity Segregation"
-Where segregation means separation.
+
+DDD stands for "Domain Driven Design"
+
+ES stands for "Event Sourcing"
 ```
 
-This project contains basic understanding of how **CQRS + Event Sourcing** works togather.  
 Add :star: if this repository helps you.
 
 ## Features
@@ -17,9 +19,9 @@ Add :star: if this repository helps you.
 - Events and Handlers
 - ReadModels
 - Query Controllers
-- Command and Event handlers auto register
-- Unit of Work for aggregates
-- Class for sequential GUIDs (CombGuid.cs)
+- Command and Event handler's auto dependency register
+- Unit of Work for multiple aggregates
+- Class for sequential GUIDs
 - Snapshots and Snapshot repository
 
 ## Tips:
@@ -32,4 +34,4 @@ Add :star: if this repository helps you.
 - Contracts contains Command and Event classes, no business logic should be written in Contracts.
 - All database updates are done from `EventHandler` only.
 - `QueryController` is featching data from thin data layer.
-
+- Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`

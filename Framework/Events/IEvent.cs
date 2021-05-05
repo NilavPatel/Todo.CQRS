@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Framework.Event
+namespace Framework.Events
 {
     public interface IEvent
     {

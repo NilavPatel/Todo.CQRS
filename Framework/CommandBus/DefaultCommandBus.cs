@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Framework.Command;
+using Framework.Commands;
 
 namespace Framework.CommandBus
 {

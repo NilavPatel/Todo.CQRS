@@ -1,4 +1,4 @@
-namespace Framework.Command
+namespace Framework.Commands
 {
     public interface ICommand
     {

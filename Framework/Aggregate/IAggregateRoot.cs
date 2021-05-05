@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Framework.Event;
+using Framework.Events;
 
 namespace Framework.Aggregate
 {

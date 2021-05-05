@@ -10,6 +10,8 @@ namespace Framework.UnitOfWork
 
         Task<T> Get<T>(Guid id, int? version = null) where T : AggregateRoot;
 
+        Task<bool> Exist(Guid id);
+
         Task Commit();
     }
 }

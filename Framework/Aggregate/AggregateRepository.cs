@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Framework.Event;
+using Framework.Events;
 using Framework.EventStore;
 using Framework.Exceptions;
 using Framework.Generators;
@@ -133,6 +133,12 @@ namespace Framework.Aggregate
                 return -1;
             ((dynamic)aggregate).Restore((dynamic)snapshot);
             return snapshot.Version;
+        }
+
+        public async Task<bool> Exist(Guid aggregateId)
+        {
+            return await _dbContext.Set<EventEntity>()
+                        .AnyAsync(e => e.AggregateId == aggregateId);
         }
     }
 }

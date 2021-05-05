@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Framework.Aggregate;
-using Framework.Event;
+using Framework.Events;
 using Framework.Exceptions;
 
 namespace Framework.UnitOfWork
@@ -87,6 +87,11 @@ namespace Framework.UnitOfWork
             {
                 await _bus.Publish(@event);
             }
+        }
+
+        public async Task<bool> Exist(Guid id)
+        {
+            return await _aggregateRepository.Exist(id);
         }
     }
 }

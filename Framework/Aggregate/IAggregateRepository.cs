@@ -8,5 +8,7 @@ namespace Framework.Aggregate
         Task Save<T>(T aggregate) where T : IAggregateRoot;
 
         Task<T> Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot;
+
+        Task<bool> Exist(Guid aggregateId);
     }
 }

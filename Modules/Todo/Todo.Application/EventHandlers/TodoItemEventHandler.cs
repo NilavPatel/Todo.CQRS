@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Todo.Application.ReadModels;
 using Todo.Contracts.Events;
-using Framework.Event;
+using Framework.Events;
 using Framework.Repository;
 
 namespace Todo.Application.EventHanders

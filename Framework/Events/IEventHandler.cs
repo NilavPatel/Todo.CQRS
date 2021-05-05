@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Framework.Event
+namespace Framework.Events
 {
     public interface IEventHandler<in TEvent> where TEvent : IEvent
     {

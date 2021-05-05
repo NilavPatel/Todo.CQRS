@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Framework.Event
+namespace Framework.Events
 {
     public class DefaultEventBus : IEventBus
     {

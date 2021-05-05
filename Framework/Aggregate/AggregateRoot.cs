@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Framework.Event;
+using Framework.Events;
 using Framework.Exceptions;
 
 namespace Framework.Aggregate
 {
     public class AggregateRoot : IAggregateRoot
     {
-        private List<IEvent> _domainEvents;
+        private List<IEvent> _domainEvents = new List<IEvent>();
         public IReadOnlyCollection<IEvent> DomainEvents => _domainEvents?.AsReadOnly();
 
         public Guid Id { get; protected set; }
@@ -16,12 +16,14 @@ namespace Framework.Aggregate
 
         public void ApplyEvent(IEvent @event)
         {
-            _domainEvents = _domainEvents ?? new List<IEvent>();
-            @event.Version = this.Version + 1;
-            this.Mutate(@event);
-            @event.SourceId = this.Id;
-            @event.OccuredOn = DateTimeOffset.UtcNow;
-            this._domainEvents.Add(@event);
+            lock (_domainEvents)
+            {
+                @event.Version = this.Version + 1;
+                this.Mutate(@event);
+                @event.SourceId = this.Id;
+                @event.OccuredOn = DateTimeOffset.UtcNow;
+                this._domainEvents.Add(@event);
+            }
         }
 
         private void Mutate(IEvent @event)
@@ -32,29 +34,35 @@ namespace Framework.Aggregate
 
         public void LoadFromHistory(IEnumerable<IEvent> history)
         {
-            foreach (var e in history.ToArray())
+            lock (_domainEvents)
             {
-                if (e.Version != Version + 1)
+                foreach (var e in history.ToArray())
                 {
-                    throw new AggregateOrEventMissingIdException(GetType(), e.GetType());
-                }
-                if (e.SourceId != Id && Id != default)
-                {
-                    throw new EventIdIncorrectException(e.SourceId, Id);
-                }
+                    if (e.Version != Version + 1)
+                    {
+                        throw new AggregateOrEventMissingIdException(GetType(), e.GetType());
+                    }
+                    if (e.SourceId != Id && Id != default)
+                    {
+                        throw new EventIdIncorrectException(e.SourceId, Id);
+                    }
                 ((dynamic)this).When((dynamic)e);
-                Id = e.SourceId;
-                Version++;
+                    Id = e.SourceId;
+                    Version++;
+                }
             }
         }
 
         public void ClearDomainEvents()
         {
-            if (this.DomainEvents == null)
+            lock (_domainEvents)
             {
-                return;
+                if (this.DomainEvents == null)
+                {
+                    return;
+                }
+                this._domainEvents.Clear();
             }
-            this._domainEvents.Clear();
         }
     }
 }

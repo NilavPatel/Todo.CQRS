@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Todo.Contracts.Commands;
 using Todo.Domain.DomainModels;
-using Framework.Command;
+using Framework.Commands;
 using Framework.CommandBus;
 using Framework.Generators;
 using Framework.UnitOfWork;
