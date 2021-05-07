@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using Framework.Aggregate;
 
@@ -7,7 +6,7 @@ namespace Framework.Snapshotting
 {
     public static class SnapshotStrategy
     {
-        private const int _snapshotInterval = 10;
+        private const int _snapshotInterval = 100;
 
         public static bool IsSnapshotable(Type aggregateType)
         {
@@ -26,12 +25,9 @@ namespace Framework.Snapshotting
             if (!IsSnapshotable(aggregate.GetType()))
                 return false;
 
-            var i = aggregate.Version;
-            for (var j = 0; j < aggregate.DomainEvents.Count(); j++)
-                if (++i % _snapshotInterval == 0 && i != 0)
-                    return true;
+            if (aggregate.Version != 0 && aggregate.Version % _snapshotInterval == 0)
+                return true;
             return false;
         }
-
     }
 }

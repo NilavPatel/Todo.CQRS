@@ -7,20 +7,19 @@ using Framework.EventStore;
 using Framework.Exceptions;
 using Framework.Generators;
 using Framework.Snapshotting;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace Framework.Aggregate
 {
     public class AggregateRepository : IAggregateRepository
     {
-        protected readonly EventStoreContext _dbContext;
-        protected readonly ISnapshotRepository _snapshotRepository;
+        private readonly ISnapshotRepository _snapshotRepository;
+        private readonly IEventrepository _eventrepository;
 
-        public AggregateRepository(EventStoreContext dbContext, ISnapshotRepository snapshotRepository)
+        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventrepository eventrepository)
         {
-            this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this._snapshotRepository = snapshotRepository;
+            this._eventrepository = eventrepository;
         }
 
         public async Task<T> Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
@@ -34,21 +33,19 @@ namespace Framework.Aggregate
             {
                 return;
             }
-            foreach (var e in aggregate.DomainEvents)
+
+            var events = aggregate.DomainEvents.Select(e => new EventEntity
             {
-                var eventEntity = new EventEntity
-                {
-                    Id = CombGuid.NewGuid(),
-                    AggregateId = e.SourceId,
-                    AggregateVersion = e.Version,
-                    AggregateName = aggregate.GetType().FullName,
-                    EventName = e.GetType().FullName,
-                    Data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e, _jsonSerializerSettings)),
-                    OccuredOn = e.OccuredOn
-                };
-                await _dbContext.Set<EventEntity>().AddAsync(eventEntity);
-            }
-            await _dbContext.SaveChangesAsync();
+                Id = CombGuid.NewGuid(),
+                AggregateId = e.SourceId,
+                AggregateVersion = e.Version,
+                AggregateName = aggregate.GetType().FullName,
+                EventName = e.GetType().FullName,
+                Data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e, _jsonSerializerSettings)),
+                OccuredOn = e.OccuredOn
+            });
+
+            await _eventrepository.SaveEvents(events);
 
             if (SnapshotStrategy.ShouldMakeSnapShot(aggregate))
             {
@@ -56,6 +53,12 @@ namespace Framework.Aggregate
             }
         }
 
+        public async Task<bool> Exist(Guid aggregateId)
+        {
+            return await _eventrepository.ExistAnyEvent(aggregateId);
+        }
+
+        #region private methods
         private async Task<T> LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
         {
             if (aggregateVersion <= 0)
@@ -67,17 +70,13 @@ namespace Framework.Aggregate
             int snapshotVersion = await RestoreAggregateFromSnapshot<T>(aggregateId, aggregate);
             if (snapshotVersion == -1)
             {
-                var events = await _dbContext.Set<EventEntity>()
-                                        .Where(e => e.AggregateId == aggregateId)
-                                        .OrderBy(e => e.AggregateVersion)
-                                        .Select(e => TransformEvent(e))
-                                        .ToListAsync();
-
-                if (!events.Any())
+                var eventEntities = await _eventrepository.GetEvents(aggregateId);
+                if (!eventEntities.Any())
                 {
                     throw new AggregateNotFoundException(typeof(T), aggregateId);
                 }
 
+                var events = eventEntities.Select(e => TransformEvent(e));
                 aggregate.LoadFromHistory(events);
                 if (aggregateVersion != null && aggregate.Version != aggregateVersion)
                 {
@@ -86,14 +85,10 @@ namespace Framework.Aggregate
             }
             else
             {
-                var events = await _dbContext.Set<EventEntity>()
-                                        .Where(e => e.AggregateId == aggregateId && e.AggregateVersion > snapshotVersion)
-                                        .OrderBy(e => e.AggregateVersion)
-                                        .Select(e => TransformEvent(e))
-                                        .ToListAsync();
-
-                if (events.Any())
+                var eventEntities = await _eventrepository.GetEventsFromVersion(aggregateId, snapshotVersion);
+                if (eventEntities.Any())
                 {
+                    var events = eventEntities.Select(e => TransformEvent(e));
                     aggregate.LoadFromHistory(events);
                     if (aggregateVersion != null && aggregate.Version != aggregateVersion)
                     {
@@ -112,6 +107,13 @@ namespace Framework.Aggregate
             return evt;
         }
 
+        private static Snapshot TransformSnapshot(SnapShotEntity snapShotEntity)
+        {
+            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(snapShotEntity.Data), _jsonSerializerSettings);
+            var snap = o as Snapshot;
+            return snap;
+        }
+
         private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
         {
             TypeNameHandling = TypeNameHandling.All,
@@ -121,24 +123,31 @@ namespace Framework.Aggregate
         private async Task SaveSnapshot(IAggregateRoot aggregate)
         {
             dynamic snapshot = ((dynamic)aggregate).GetSnapshot();
-            await _snapshotRepository.Save(snapshot);
+            var snapshotEntity = new SnapShotEntity
+            {
+                Id = CombGuid.NewGuid(),
+                AggregateId = snapshot.Id,
+                AggregateVersion = snapshot.Version,
+                SnapshotName = snapshot.GetType().FullName,
+                Data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(snapshot, _jsonSerializerSettings)),
+                CreatedOn = DateTime.Now
+            };
+            await _snapshotRepository.Save(snapshotEntity);
         }
 
         private async Task<int> RestoreAggregateFromSnapshot<T>(Guid id, IAggregateRoot aggregate)
         {
             if (!SnapshotStrategy.IsSnapshotable(aggregate.GetType()))
                 return -1;
-            var snapshot = await _snapshotRepository.Get(id);
-            if (snapshot == null)
+            var snapshotEntity = await _snapshotRepository.Get(id);
+            if (snapshotEntity == null)
+            {
                 return -1;
+            }
+            var snapshot = TransformSnapshot(snapshotEntity);
             ((dynamic)aggregate).Restore((dynamic)snapshot);
             return snapshot.Version;
         }
-
-        public async Task<bool> Exist(Guid aggregateId)
-        {
-            return await _dbContext.Set<EventEntity>()
-                        .AnyAsync(e => e.AggregateId == aggregateId);
-        }
+        #endregion
     }
 }
