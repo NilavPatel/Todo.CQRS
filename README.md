@@ -31,3 +31,7 @@
 - All database updates are done from `EventHandler` only.
 - `QueryController` is fetching data from the thin data layer.
 - Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`
+
+## Diagrams:
+
+![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Diagrams/CQRS.jpg)
