@@ -8,7 +8,7 @@ namespace Framework.Repository
 {
     public class BaseRepository<TContext, T> : IBaseRepository<TContext, T> where TContext : DbContext where T : BaseEntity, new()
     {
-        protected readonly TContext _dbContext;
+        private readonly TContext _dbContext;
 
         public BaseRepository(TContext dbContext)
         {

@@ -8,7 +8,7 @@ namespace Framework.EventStore
 {
     public class Eventrepository : IEventrepository
     {
-        protected readonly EventStoreContext _dbContext;
+        private readonly EventStoreContext _dbContext;
 
         public Eventrepository(EventStoreContext dbContext)
         {

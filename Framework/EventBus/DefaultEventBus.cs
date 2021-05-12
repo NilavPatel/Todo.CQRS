@@ -7,7 +7,8 @@ namespace Framework.Events
 {
     public class DefaultEventBus : IEventBus
     {
-        IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
+
         public DefaultEventBus(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));

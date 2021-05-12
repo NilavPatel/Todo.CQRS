@@ -6,7 +6,8 @@ namespace Framework.CommandBus
 {
     public class DefaultCommandBus : ICommandBus
     {
-        IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
+
         public DefaultCommandBus(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));

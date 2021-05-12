@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Framework.Aggregate;
-using Framework.Events;
 using Framework.Exceptions;
 
 namespace Framework.UnitOfWork
@@ -10,12 +9,10 @@ namespace Framework.UnitOfWork
     public class UowRepository : IUowRepository
     {
         private readonly Dictionary<Guid, AggregateRoot> _trackedAggregates;
-        private IEventBus _bus;
-        private IAggregateRepository _aggregateRepository;
+        private readonly IAggregateRepository _aggregateRepository;
 
-        public UowRepository(IEventBus bus, IAggregateRepository aggregateRepository)
+        public UowRepository(IAggregateRepository aggregateRepository)
         {
-            this._bus = bus ?? throw new ArgumentNullException(nameof(bus));
             this._aggregateRepository = aggregateRepository ?? throw new ArgumentNullException(nameof(aggregateRepository));
             _trackedAggregates = new Dictionary<Guid, AggregateRoot>();
         }
@@ -62,8 +59,6 @@ namespace Framework.UnitOfWork
                 foreach (var aggregate in _trackedAggregates.Values)
                 {
                     await _aggregateRepository.Save(aggregate);
-                    await PublishEvents(aggregate.DomainEvents);
-                    aggregate.ClearDomainEvents();
                 }
             }
             finally
@@ -75,18 +70,6 @@ namespace Framework.UnitOfWork
         private bool IsTracked(Guid id)
         {
             return _trackedAggregates.ContainsKey(id);
-        }
-
-        private async Task PublishEvents(IReadOnlyCollection<IEvent> events)
-        {
-            if (events == null)
-            {
-                return;
-            }
-            foreach (var @event in events)
-            {
-                await _bus.Publish(@event);
-            }
         }
 
         public async Task<bool> Exist(Guid id)

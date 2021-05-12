@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +16,13 @@ namespace Framework.Aggregate
     {
         private readonly ISnapshotRepository _snapshotRepository;
         private readonly IEventrepository _eventrepository;
+        private readonly IEventBus _bus;
 
-        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventrepository eventrepository)
+        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventrepository eventrepository, IEventBus bus)
         {
-            this._snapshotRepository = snapshotRepository;
-            this._eventrepository = eventrepository;
+            this._snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
+            this._eventrepository = eventrepository ?? throw new ArgumentNullException(nameof(eventrepository));
+            this._bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
         public async Task<T> Get<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
@@ -51,6 +54,9 @@ namespace Framework.Aggregate
             {
                 await SaveSnapshot(aggregate);
             }
+
+            await PublishEvents(aggregate.DomainEvents);
+            aggregate.ClearDomainEvents();
         }
 
         public async Task<bool> Exist(Guid aggregateId)
@@ -120,6 +126,17 @@ namespace Framework.Aggregate
             NullValueHandling = NullValueHandling.Ignore
         };
 
+        private async Task PublishEvents(IReadOnlyCollection<IEvent> events)
+        {
+            if (events == null)
+            {
+                return;
+            }
+            foreach (var @event in events)
+            {
+                await _bus.Publish(@event);
+            }
+        }
         private async Task SaveSnapshot(IAggregateRoot aggregate)
         {
             dynamic snapshot = ((dynamic)aggregate).GetSnapshot();

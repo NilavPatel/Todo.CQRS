@@ -7,7 +7,7 @@ namespace Framework.EventStore
 {
     public class SnapshotRepository : ISnapshotRepository
     {
-        protected readonly EventStoreContext _dbContext;
+        private readonly EventStoreContext _dbContext;
 
         public SnapshotRepository(EventStoreContext dbContext)
         {
