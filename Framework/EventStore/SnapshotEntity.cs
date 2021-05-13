@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Framework.EventStore
 {
-    public class SnapShotEntity
+    public class SnapshotEntity
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid SnapshotId { get; set; }
         public Guid AggregateId { get; set; }
         public int AggregateVersion { get; set; }
         public string SnapshotName { get; set; }

@@ -2,16 +2,19 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
+using Framework.EventStore;
 
 namespace Framework.Events
 {
     public class DefaultEventBus : IEventBus
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IEventrepository _eventRepository;
 
-        public DefaultEventBus(IServiceProvider serviceProvider)
+        public DefaultEventBus(IServiceProvider serviceProvider, IEventrepository eventRepository)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
         }
 
         public async Task Publish<TEvent>(TEvent eve) where TEvent : IEvent
@@ -26,6 +29,7 @@ namespace Framework.Events
             {
                 await ((dynamic)subscriber).Handle((dynamic)eve);
             }
+            await _eventRepository.CompleteEvent(eve.EventId);
         }
     }
 }

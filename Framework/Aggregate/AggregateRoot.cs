@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Framework.Events;
 using Framework.Exceptions;
+using Framework.Generators;
 
 namespace Framework.Aggregate
 {
@@ -18,6 +19,7 @@ namespace Framework.Aggregate
         {
             lock (_domainEvents)
             {
+                @event.EventId = CombGuid.NewGuid();
                 @event.Version = this.Version + 1;
                 this.Mutate(@event);
                 @event.SourceId = this.Id;

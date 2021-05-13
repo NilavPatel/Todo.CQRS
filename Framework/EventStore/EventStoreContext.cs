@@ -8,6 +8,6 @@ namespace Framework.EventStore
         { }
 
         public DbSet<EventEntity> Events { get; set; }
-        public DbSet<SnapShotEntity> SnapShots { get; set; }
+        public DbSet<SnapshotEntity> Snapshots { get; set; }
     }
 }

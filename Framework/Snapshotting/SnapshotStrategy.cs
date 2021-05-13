@@ -20,7 +20,7 @@ namespace Framework.Snapshotting
             }
         }
 
-        public static bool ShouldMakeSnapShot(IAggregateRoot aggregate)
+        public static bool ShouldMakeSnapshot(IAggregateRoot aggregate)
         {
             if (!IsSnapshotable(aggregate.GetType()))
                 return false;

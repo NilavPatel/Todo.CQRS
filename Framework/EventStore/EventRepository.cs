@@ -45,5 +45,13 @@ namespace Framework.EventStore
             return await _dbContext.Set<EventEntity>()
                 .AnyAsync(e => e.AggregateId == aggregateId);
         }
+
+        public async Task CompleteEvent(Guid eventId)
+        {
+            var eve = await _dbContext.Set<EventEntity>()
+                            .FirstAsync(e => e.EventId == eventId);
+            eve.Success = true;
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

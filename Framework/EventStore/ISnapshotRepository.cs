@@ -5,7 +5,7 @@ namespace Framework.EventStore
 {
     public interface ISnapshotRepository
     {
-        Task<SnapShotEntity> Get(Guid aggregateId);
-        Task Save(SnapShotEntity snapshot);
+        Task<SnapshotEntity> Get(Guid aggregateId);
+        Task Save(SnapshotEntity snapshot);
     }
 }

@@ -39,7 +39,7 @@ namespace Framework.Aggregate
 
             var events = aggregate.DomainEvents.Select(e => new EventEntity
             {
-                Id = CombGuid.NewGuid(),
+                EventId = e.EventId,
                 AggregateId = e.SourceId,
                 AggregateVersion = e.Version,
                 AggregateName = aggregate.GetType().FullName,
@@ -50,7 +50,7 @@ namespace Framework.Aggregate
 
             await _eventrepository.SaveEvents(events);
 
-            if (SnapshotStrategy.ShouldMakeSnapShot(aggregate))
+            if (SnapshotStrategy.ShouldMakeSnapshot(aggregate))
             {
                 await SaveSnapshot(aggregate);
             }
@@ -113,7 +113,7 @@ namespace Framework.Aggregate
             return evt;
         }
 
-        private static Snapshot TransformSnapshot(SnapShotEntity snapShotEntity)
+        private static Snapshot TransformSnapshot(SnapshotEntity snapShotEntity)
         {
             var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(snapShotEntity.Data), _jsonSerializerSettings);
             var snap = o as Snapshot;
@@ -140,9 +140,9 @@ namespace Framework.Aggregate
         private async Task SaveSnapshot(IAggregateRoot aggregate)
         {
             dynamic snapshot = ((dynamic)aggregate).GetSnapshot();
-            var snapshotEntity = new SnapShotEntity
+            var snapshotEntity = new SnapshotEntity
             {
-                Id = CombGuid.NewGuid(),
+                SnapshotId = CombGuid.NewGuid(),
                 AggregateId = snapshot.Id,
                 AggregateVersion = snapshot.Version,
                 SnapshotName = snapshot.GetType().FullName,

@@ -10,5 +10,6 @@ namespace Framework.EventStore
         Task<IEnumerable<EventEntity>> GetEvents(Guid aggregateId);
         Task<IEnumerable<EventEntity>> GetEventsFromVersion(Guid aggregateId, int version);
         Task<bool> ExistAnyEvent(Guid aggregateId);
+        Task CompleteEvent(Guid eventId);
     }
 }
