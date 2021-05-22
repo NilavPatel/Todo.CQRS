@@ -1,6 +1,6 @@
 using System;
 
-namespace Framework.CommandBus
+namespace Framework.Exceptions
 {
     public class CommandHandlerNotFoundException : Exception
     {

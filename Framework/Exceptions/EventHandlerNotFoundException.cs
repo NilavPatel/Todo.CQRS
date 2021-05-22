@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Framework.Events
+namespace Framework.Exceptions
 {
     public class EventHandlerNotFoundException : Exception
     {

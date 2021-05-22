@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
 using Framework.EventStore;
+using Framework.Exceptions;
 
 namespace Framework.Events
 {
@@ -29,7 +30,7 @@ namespace Framework.Events
             {
                 await ((dynamic)subscriber).Handle((dynamic)eve);
             }
-            await _eventRepository.CompleteEvent(eve.EventId);
+            await _eventRepository.MarkEventAsSuccess(eve.EventId);
         }
     }
 }

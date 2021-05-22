@@ -8,17 +8,17 @@
 
 ## Features
 
-- Commands and Handlers
-- Domain Models (Aggregates)
-- Aggregate Repository
-- Event Sourcing
-- Events and Handlers
+- Commands and handlers
+- Domain models (Aggregates)
+- Aggregate repository
+- Event sourcing
+- Events and handlers (Projections)
 - Read models
-- Query Controllers
-- Command and Event handler's auto dependency register
-- Unit of Work for multiple aggregates
+- Query controllers
+- Command and event handler's auto dependency register
+- Unit of work for multiple aggregates
+- Snapshots and snapshot repository
 - Class for sequential GUIDs
-- Snapshots and Snapshot repository
 
 ## Tips:
 

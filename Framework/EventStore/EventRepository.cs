@@ -40,13 +40,13 @@ namespace Framework.EventStore
             return await _dbContext.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> ExistAnyEvent(Guid aggregateId)
+        public async Task<bool> IsAnyEventExist(Guid aggregateId)
         {
             return await _dbContext.Set<EventEntity>()
                 .AnyAsync(e => e.AggregateId == aggregateId);
         }
 
-        public async Task CompleteEvent(Guid eventId)
+        public async Task MarkEventAsSuccess(Guid eventId)
         {
             var eve = await _dbContext.Set<EventEntity>()
                             .FirstAsync(e => e.EventId == eventId);

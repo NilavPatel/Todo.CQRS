@@ -61,7 +61,7 @@ namespace Framework.Aggregate
 
         public async Task<bool> Exist(Guid aggregateId)
         {
-            return await _eventrepository.ExistAnyEvent(aggregateId);
+            return await _eventrepository.IsAnyEventExist(aggregateId);
         }
 
         #region private methods
