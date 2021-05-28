@@ -5,6 +5,6 @@ namespace Framework.Commands
 {
     public interface ICommandHandler<in TCommand> where TCommand : ICommand
     {
-        Task<ICommandResult> Handle(TCommand command);
+        Task<ICommandResult> HandleAsync(TCommand command);
     }
 }

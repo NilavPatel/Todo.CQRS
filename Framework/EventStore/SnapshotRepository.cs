@@ -14,7 +14,7 @@ namespace Framework.EventStore
             this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<SnapshotEntity> Get(Guid aggregateId)
+        public async Task<SnapshotEntity> GetAsync(Guid aggregateId)
         {
             var snapshotEntity = await _dbContext.Set<SnapshotEntity>()
                     .Where(x => x.AggregateId == aggregateId)
@@ -24,7 +24,7 @@ namespace Framework.EventStore
             return snapshotEntity;
         }
 
-        public async Task Save(SnapshotEntity snapshot)
+        public async Task SaveAsync(SnapshotEntity snapshot)
         {
             await _dbContext.Set<SnapshotEntity>().AddAsync(snapshot);
             await _dbContext.SaveChangesAsync();

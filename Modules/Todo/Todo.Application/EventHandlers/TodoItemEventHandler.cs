@@ -19,7 +19,7 @@ namespace Todo.Application.EventHanders
             this._todoItemRepository = todoItemRepository;
         }
 
-        public async Task Handle(TodoItemCreated @event)
+        public async Task HandleAsync(TodoItemCreated @event)
         {
             var todoItem = new TodoItem
             {
@@ -31,7 +31,7 @@ namespace Todo.Application.EventHanders
             await this._todoItemRepository.AddAsync(todoItem);
         }
 
-        public async Task Handle(TodoItemMarkedAsComplete @event)
+        public async Task HandleAsync(TodoItemMarkedAsComplete @event)
         {
             var todoItem = await _todoItemRepository.GetByIdAsync(@event.SourceId);
             todoItem.IsComplete = true;
@@ -39,7 +39,7 @@ namespace Todo.Application.EventHanders
             await this._todoItemRepository.UpdateAsync(todoItem);
         }
 
-        public async Task Handle(TodoItemMarkedAsUnComplete @event)
+        public async Task HandleAsync(TodoItemMarkedAsUnComplete @event)
         {
             var todoItem = await _todoItemRepository.GetByIdAsync(@event.SourceId);
             todoItem.IsComplete = false;
@@ -47,7 +47,7 @@ namespace Todo.Application.EventHanders
             await this._todoItemRepository.UpdateAsync(todoItem);
         }
 
-        public async Task Handle(TodoItemTitleUpdated @event)
+        public async Task HandleAsync(TodoItemTitleUpdated @event)
         {
             var todoItem = await _todoItemRepository.GetByIdAsync(@event.SourceId);
             todoItem.Title = @event.Title;

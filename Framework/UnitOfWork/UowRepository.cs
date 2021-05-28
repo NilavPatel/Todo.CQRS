@@ -17,7 +17,7 @@ namespace Framework.UnitOfWork
             _trackedAggregates = new Dictionary<Guid, AggregateRoot>();
         }
 
-        public async Task<T> Get<T>(Guid id, int? version = null) where T : AggregateRoot
+        public async Task<T> GetAsync<T>(Guid id, int? version = null) where T : AggregateRoot
         {
             if (IsTracked(id))
             {
@@ -29,17 +29,17 @@ namespace Framework.UnitOfWork
                 return trackedAggregate;
             }
 
-            var aggregate = await _aggregateRepository.Get<T>(id, version);
+            var aggregate = await _aggregateRepository.GetAsync<T>(id, version);
             if (version != null && aggregate.Version != version)
             {
                 throw new ConcurrencyException(id);
             }
-            await Add(aggregate);
+            await AddAsync(aggregate);
 
             return aggregate;
         }
 
-        public Task Add<T>(T aggregate) where T : AggregateRoot
+        public Task AddAsync<T>(T aggregate) where T : AggregateRoot
         {
             if (!IsTracked(aggregate.Id))
             {
@@ -52,13 +52,13 @@ namespace Framework.UnitOfWork
             return Task.FromResult(0);
         }
 
-        public async Task Commit()
+        public async Task CommitAsync()
         {
             try
             {
                 foreach (var aggregate in _trackedAggregates.Values)
                 {
-                    await _aggregateRepository.Save(aggregate);
+                    await _aggregateRepository.SaveAsync(aggregate);
                 }
             }
             finally
@@ -72,9 +72,9 @@ namespace Framework.UnitOfWork
             return _trackedAggregates.ContainsKey(id);
         }
 
-        public async Task<bool> Exist(Guid id)
+        public async Task<bool> ExistAsync(Guid id)
         {
-            return await _aggregateRepository.Exist(id);
+            return await _aggregateRepository.ExistAsync(id);
         }
     }
 }

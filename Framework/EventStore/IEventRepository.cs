@@ -6,10 +6,10 @@ namespace Framework.EventStore
 {
     public interface IEventrepository
     {
-        Task<bool> SaveEvents(IEnumerable<EventEntity> events);
-        Task<IEnumerable<EventEntity>> GetEvents(Guid aggregateId);
-        Task<IEnumerable<EventEntity>> GetEventsFromVersion(Guid aggregateId, int version);
-        Task<bool> IsAnyEventExist(Guid aggregateId);
-        Task MarkEventAsSuccess(Guid eventId);
+        Task<bool> SaveEventsAsync(IEnumerable<EventEntity> events);
+        Task<IEnumerable<EventEntity>> GetEventsAsync(Guid aggregateId);
+        Task<IEnumerable<EventEntity>> GetEventsFromVersionAsync(Guid aggregateId, int version);
+        Task<bool> IsAnyEventExistAsync(Guid aggregateId);
+        Task MarkEventAsSuccessAsync(Guid eventId);
     }
 }

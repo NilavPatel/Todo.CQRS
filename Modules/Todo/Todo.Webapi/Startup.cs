@@ -30,10 +30,12 @@ namespace Todo.Webapi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Todo.Webapi", Version = "v1" });
             });
 
-            // Add event store db context and register command handler, event handler
-            var resgistrar = new RegistrarService(services);
-            resgistrar.AddEventStoreDbContext(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=EventStore;User Id=sa;Password=satest12@;");
-            resgistrar.RegisterHandlers(Assembly.Load("Todo.Application"));
+            // Register framework service dependecies and 
+            // Add event store db context and 
+            // Register command handler, event handler
+            services.RegisterFrameworkServices();
+            services.AddEventStoreDbContext(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=EventStore;User Id=sa;Password=satest12@;");
+            services.RegisterHandlersFromAssembly(Assembly.Load("Todo.Application"));
 
             services.AddDbContext<TodoContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;"));
         }

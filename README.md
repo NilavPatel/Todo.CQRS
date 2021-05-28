@@ -20,7 +20,7 @@
 - Snapshots and snapshot repository
 - Class for sequential GUIDs
 
-## Tips:
+## Notes:
 
 - Inherit domain model with `AggregateRoot` or `SnapshotAggregateRoot<Snapshot>`.
 - Domain model must have a parameterless constructor with a `private` access modifier.
@@ -30,8 +30,8 @@
 - `Contracts` contain Command and Event classes, no business logic should be written in `Contracts`.
 - All database updates are done from `EventHandler` only.
 - `QueryController` is fetching data from the thin data layer.
-- Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`
+- Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`.
 
 ## Diagrams:
 
-![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Diagrams/CQRS.jpg)
+![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/docs/CQRS.jpg)

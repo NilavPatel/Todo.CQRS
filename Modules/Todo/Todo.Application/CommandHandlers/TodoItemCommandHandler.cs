@@ -21,35 +21,35 @@ namespace Todo.Application.CommandHanders
             this._uowRepository = uowRepository;
         }
 
-        public async Task<ICommandResult> Handle(CreateTodoItem createTodo)
+        public async Task<ICommandResult> HandleAsync(CreateTodoItem createTodo)
         {
             var todoItem = new TodoItem(CombGuid.NewGuid(), createTodo.Title, createTodo.IsComplete);
-            await this._uowRepository.Add(todoItem);
-            await this._uowRepository.Commit();
+            await this._uowRepository.AddAsync(todoItem);
+            await this._uowRepository.CommitAsync();
             return new CommandResult(HttpStatusCode.OK, new { AggregateId = todoItem.Id, AggregateVersion = todoItem.Version });
         }
 
-        public async Task<ICommandResult> Handle(MarkTodoItemAsComplete command)
+        public async Task<ICommandResult> HandleAsync(MarkTodoItemAsComplete command)
         {
-            var todoItem = await this._uowRepository.Get<TodoItem>(command.Id, command.Version);
+            var todoItem = await this._uowRepository.GetAsync<TodoItem>(command.Id, command.Version);
             todoItem.MarkTodoItemAsComplete();
-            await this._uowRepository.Commit();
+            await this._uowRepository.CommitAsync();
             return new CommandResult(HttpStatusCode.OK, new { AggregateId = todoItem.Id, AggregateVersion = todoItem.Version });
         }
 
-        public async Task<ICommandResult> Handle(MarkTodoItemAsUnComplete command)
+        public async Task<ICommandResult> HandleAsync(MarkTodoItemAsUnComplete command)
         {
-            var todoItem = await this._uowRepository.Get<TodoItem>(command.Id, command.Version);
+            var todoItem = await this._uowRepository.GetAsync<TodoItem>(command.Id, command.Version);
             todoItem.MarkTodoItemAsUnComplete();
-            await this._uowRepository.Commit();
+            await this._uowRepository.CommitAsync();
             return new CommandResult(HttpStatusCode.OK, new { AggregateId = todoItem.Id, AggregateVersion = todoItem.Version });
         }
 
-        public async Task<ICommandResult> Handle(UpdateTodoItemTitle command)
+        public async Task<ICommandResult> HandleAsync(UpdateTodoItemTitle command)
         {
-            var todoItem = await this._uowRepository.Get<TodoItem>(command.Id, command.Version);
+            var todoItem = await this._uowRepository.GetAsync<TodoItem>(command.Id, command.Version);
             todoItem.UpdateTodoItemTitle(command.Title);
-            await this._uowRepository.Commit();
+            await this._uowRepository.CommitAsync();
             return new CommandResult(HttpStatusCode.OK, new { AggregateId = todoItem.Id, AggregateVersion = todoItem.Version });
         }
     }

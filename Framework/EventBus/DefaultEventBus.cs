@@ -18,7 +18,7 @@ namespace Framework.Events
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
         }
 
-        public async Task Publish<TEvent>(TEvent eve) where TEvent : IEvent
+        public async Task PublishAsync<TEvent>(TEvent eve) where TEvent : IEvent
         {
             var type = typeof(IEventHandler<>).MakeGenericType(eve.GetType());
             var subscribers = _serviceProvider.GetServices(type);
@@ -28,9 +28,9 @@ namespace Framework.Events
             }
             foreach (var subscriber in subscribers)
             {
-                await ((dynamic)subscriber).Handle((dynamic)eve);
+                await ((dynamic)subscriber).HandleAsync((dynamic)eve);
             }
-            await _eventRepository.MarkEventAsSuccess(eve.EventId);
+            await _eventRepository.MarkEventAsSuccessAsync(eve.EventId);
         }
     }
 }

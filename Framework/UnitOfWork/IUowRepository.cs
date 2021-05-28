@@ -6,12 +6,12 @@ namespace Framework.UnitOfWork
 {
     public interface IUowRepository
     {
-        Task Add<T>(T aggregate) where T : AggregateRoot;
+        Task AddAsync<T>(T aggregate) where T : AggregateRoot;
 
-        Task<T> Get<T>(Guid id, int? version = null) where T : AggregateRoot;
+        Task<T> GetAsync<T>(Guid id, int? version = null) where T : AggregateRoot;
 
-        Task<bool> Exist(Guid id);
+        Task<bool> ExistAsync(Guid id);
 
-        Task Commit();
+        Task CommitAsync();
     }
 }

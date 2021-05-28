@@ -13,39 +13,31 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Framework.Registrar
 {
-    public class RegistrarService
+    public static class RegistrarService
     {
-        private readonly IServiceCollection _services;
-
-        public RegistrarService(IServiceCollection services)
+        public static void AddEventStoreDbContext(this IServiceCollection services, string connectionString)
         {
-            _services = services ?? throw new ArgumentNullException(nameof(services));
-            RegisterRequiredServices();
+            services.AddDbContext<EventStoreContext>(options => options.UseSqlServer(connectionString));
         }
 
-        private void RegisterRequiredServices()
+        public static void RegisterHandlersFromAssembly(this IServiceCollection services, Assembly assembly)
         {
-            _services.AddScoped<ICommandBus, DefaultCommandBus>();
-            _services.AddScoped<IEventBus, DefaultEventBus>();
-            _services.AddScoped<IAggregateRepository, AggregateRepository>();
-            _services.AddScoped<IUowRepository, UowRepository>();
-            _services.AddScoped<IEventrepository, Eventrepository>();
-            _services.AddScoped<ISnapshotRepository, SnapshotRepository>();
-            _services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
+            RegisterCommandHandlers(services, assembly);
+            RegisterEventHandlers(services, assembly);
         }
 
-        public void AddEventStoreDbContext(string connectionString)
+        public static void RegisterFrameworkServices(this IServiceCollection services)
         {
-            _services.AddDbContext<EventStoreContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<ICommandBus, DefaultCommandBus>();
+            services.AddScoped<IEventBus, DefaultEventBus>();
+            services.AddScoped<IAggregateRepository, AggregateRepository>();
+            services.AddScoped<IUowRepository, UowRepository>();
+            services.AddScoped<IEventrepository, Eventrepository>();
+            services.AddScoped<ISnapshotRepository, SnapshotRepository>();
+            services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
         }
 
-        public void RegisterHandlers(Assembly assembly)
-        {
-            RegisterCommandHandlers(assembly);
-            RegisterEventHandlers(assembly);
-        }
-
-        private void RegisterCommandHandlers(Assembly assembly)
+        private static void RegisterCommandHandlers(IServiceCollection services, Assembly assembly)
         {
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
@@ -57,12 +49,12 @@ namespace Framework.Registrar
                     .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>));
                 foreach (var i in interfaces)
                 {
-                    _services.AddScoped(i, handler);
+                    services.AddScoped(i, handler);
                 }
             }
         }
 
-        private void RegisterEventHandlers(Assembly assembly)
+        private static void RegisterEventHandlers(IServiceCollection services, Assembly assembly)
         {
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
@@ -74,7 +66,7 @@ namespace Framework.Registrar
                     .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>));
                 foreach (var i in interfaces)
                 {
-                    _services.AddScoped(i, handler);
+                    services.AddScoped(i, handler);
                 }
             }
         }

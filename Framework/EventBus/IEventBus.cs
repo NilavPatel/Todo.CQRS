@@ -4,6 +4,6 @@ namespace Framework.Events
 {
     public interface IEventBus
     {
-        Task Publish<TEvent>(TEvent @event) where TEvent : IEvent;
+        Task PublishAsync<TEvent>(TEvent @event) where TEvent : IEvent;
     }
 }

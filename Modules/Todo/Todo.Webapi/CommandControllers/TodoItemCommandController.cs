@@ -19,28 +19,28 @@ namespace Todo.Webapi.CommandControllers
         [HttpPost]
         public async Task<ICommandResult> CreateTodoItem(CreateTodoItem createTodoItem)
         {
-            return await _bus.Submit(createTodoItem);
+            return await _bus.SubmitAsync(createTodoItem);
         }
 
         [Route("MarkTodoItemAsComplete")]
         [HttpPost]
         public async Task<ICommandResult> MarkTodoItemAsComplete(MarkTodoItemAsComplete markTodoItemAsComplete)
         {
-            return await _bus.Submit(markTodoItemAsComplete);
+            return await _bus.SubmitAsync(markTodoItemAsComplete);
         }
 
         [Route("MarkTodoItemAsUnComplete")]
         [HttpPost]
         public async Task<ICommandResult> MarkTodoItemAsUnComplete(MarkTodoItemAsUnComplete markTodoItemAsUnComplete)
         {
-            return await _bus.Submit(markTodoItemAsUnComplete);
+            return await _bus.SubmitAsync(markTodoItemAsUnComplete);
         }
 
         [Route("UpdateTodoItemTitle")]
         [HttpPost]
         public async Task<ICommandResult> UpdateTodoItemTitle(UpdateTodoItemTitle updateTodoItemTitle)
         {
-            return await _bus.Submit(updateTodoItemTitle);
+            return await _bus.SubmitAsync(updateTodoItemTitle);
         }
     }
 }

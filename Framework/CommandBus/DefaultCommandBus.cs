@@ -14,14 +14,14 @@ namespace Framework.CommandBus
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public async Task<ICommandResult> Submit<TCommand>(TCommand command) where TCommand : ICommand
+        public async Task<ICommandResult> SubmitAsync<TCommand>(TCommand command) where TCommand : ICommand
         {
             var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>));
             if (handler == null)
             {
                 throw new CommandHandlerNotFoundException(typeof(TCommand));
             }
-            return await ((ICommandHandler<TCommand>)handler).Handle(command);
+            return await ((ICommandHandler<TCommand>)handler).HandleAsync(command);
         }
     }
 }
