@@ -34,4 +34,6 @@
 
 ## Diagrams:
 
-![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Docs/CQRS.jpg)
+![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Docs/CQRS.png)
+![AggregateRepository-GetAggregate](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Docs/AggregateRepository-GetAggregate.png)
+
