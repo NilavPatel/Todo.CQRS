@@ -34,4 +34,4 @@
 
 ## Diagrams:
 
-![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/docs/CQRS.jpg)
+![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Docs/CQRS.jpg)
