@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Todo.Application.ReadModels;
 using Framework.Registrar;
-using System.Reflection;
 
 namespace Todo.Webapi
 {
@@ -32,10 +31,11 @@ namespace Todo.Webapi
 
             // Register framework service dependecies and 
             // Add event store db context and 
-            // Register command handler, event handler
+            // Register command handlers, event handlers
             services.RegisterFrameworkServices();
             services.AddEventStoreDbContext(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=EventStore;User Id=sa;Password=satest12@;");
-            services.RegisterHandlersFromAssembly(Assembly.Load("Todo.Application"));
+            services.RegisterCommandHandlers("Todo.Application");
+            services.RegisterEventHandlers("Todo.Application");
 
             services.AddDbContext<TodoContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;"));
         }

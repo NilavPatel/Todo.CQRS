@@ -20,12 +20,6 @@ namespace Framework.Registrar
             services.AddDbContext<EventStoreContext>(options => options.UseSqlServer(connectionString));
         }
 
-        public static void RegisterHandlersFromAssembly(this IServiceCollection services, Assembly assembly)
-        {
-            RegisterCommandHandlers(services, assembly);
-            RegisterEventHandlers(services, assembly);
-        }
-
         public static void RegisterFrameworkServices(this IServiceCollection services)
         {
             services.AddScoped<ICommandBus, DefaultCommandBus>();
@@ -37,8 +31,9 @@ namespace Framework.Registrar
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
         }
 
-        private static void RegisterCommandHandlers(IServiceCollection services, Assembly assembly)
+        public static void RegisterCommandHandlers(this IServiceCollection services, string assemblyName)
         {
+            var assembly = Assembly.Load(assemblyName);
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
                          .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)));
@@ -54,8 +49,9 @@ namespace Framework.Registrar
             }
         }
 
-        private static void RegisterEventHandlers(IServiceCollection services, Assembly assembly)
+        public static void RegisterEventHandlers(this IServiceCollection services, string assemblyName)
         {
+            var assembly = Assembly.Load(assemblyName);
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
                          .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>)));
