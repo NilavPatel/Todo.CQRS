@@ -4,15 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Framework.EventStore;
 using Framework.Exceptions;
+using Framework.Events;
 
-namespace Framework.Events
+namespace Framework.EventBus
 {
     public class DefaultEventBus : IEventBus
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IEventrepository _eventRepository;
+        private readonly IEventRepository _eventRepository;
 
-        public DefaultEventBus(IServiceProvider serviceProvider, IEventrepository eventRepository)
+        public DefaultEventBus(IServiceProvider serviceProvider, IEventRepository eventRepository)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             _eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));

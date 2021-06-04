@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Framework.EventStore
 {
-    public class Eventrepository : IEventrepository
+    public class EventRepository : IEventRepository
     {
         private readonly EventStoreContext _dbContext;
 
-        public Eventrepository(EventStoreContext dbContext)
+        public EventRepository(EventStoreContext dbContext)
         {
             this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }

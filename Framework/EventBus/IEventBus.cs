@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Framework.Events;
 
-namespace Framework.Events
+namespace Framework.EventBus
 {
     public interface IEventBus
     {

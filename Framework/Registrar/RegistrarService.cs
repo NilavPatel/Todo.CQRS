@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Reflection;
 using Framework.Aggregate;
@@ -10,6 +9,7 @@ using Framework.Repository;
 using Framework.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Framework.EventBus;
 
 namespace Framework.Registrar
 {
@@ -32,7 +32,7 @@ namespace Framework.Registrar
             services.AddScoped<IEventBus, DefaultEventBus>();
             services.AddScoped<IAggregateRepository, AggregateRepository>();
             services.AddScoped<IUowRepository, UowRepository>();
-            services.AddScoped<IEventrepository, Eventrepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
         }

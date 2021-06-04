@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Framework.EventStore
 {
-    public interface IEventrepository
+    public interface IEventRepository
     {
         Task<bool> SaveEventsAsync(IEnumerable<EventEntity> events);
         Task<IEnumerable<EventEntity>> GetEventsAsync(Guid aggregateId);

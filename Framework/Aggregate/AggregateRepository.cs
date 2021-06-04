@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Framework.EventBus;
 using Framework.Events;
 using Framework.EventStore;
 using Framework.Exceptions;
@@ -15,10 +16,10 @@ namespace Framework.Aggregate
     public class AggregateRepository : IAggregateRepository
     {
         private readonly ISnapshotRepository _snapshotRepository;
-        private readonly IEventrepository _eventrepository;
+        private readonly IEventRepository _eventrepository;
         private readonly IEventBus _bus;
 
-        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventrepository eventrepository, IEventBus bus)
+        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventRepository eventrepository, IEventBus bus)
         {
             this._snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this._eventrepository = eventrepository ?? throw new ArgumentNullException(nameof(eventrepository));
