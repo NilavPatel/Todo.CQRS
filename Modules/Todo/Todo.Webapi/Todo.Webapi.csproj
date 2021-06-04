@@ -10,7 +10,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\..\framework\framework.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Framework.csproj" />
     <ProjectReference Include="..\Todo.Domain\Todo.Domain.csproj" />
     <ProjectReference Include="..\Todo.Contracts\Todo.Contracts.csproj" />
     <ProjectReference Include="..\Todo.Application\Todo.Application.csproj" />
