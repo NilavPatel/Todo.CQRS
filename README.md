@@ -29,7 +29,7 @@
 - All business logic and validation should be written in domain models.
 - `Contracts` contain Command and Event classes, no business logic should be written in `Contracts`.
 - All database updates are done from `EventHandler` only.
-- `QueryController` is fetching data from the thin data layer.
+- Use `IReadRepository` for query controllers.
 - Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`.
 
 ## Diagrams:

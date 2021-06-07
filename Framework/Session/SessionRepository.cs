@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 using Framework.Aggregate;
 using Framework.Exceptions;
 
-namespace Framework.UnitOfWork
+namespace Framework.Session
 {
-    public class UowRepository : IUowRepository
+    public class SessionRepository : ISessionRepository
     {
         private readonly Dictionary<Guid, AggregateRoot> _trackedAggregates;
         private readonly IAggregateRepository _aggregateRepository;
 
-        public UowRepository(IAggregateRepository aggregateRepository)
+        public SessionRepository(IAggregateRepository aggregateRepository)
         {
             this._aggregateRepository = aggregateRepository ?? throw new ArgumentNullException(nameof(aggregateRepository));
             _trackedAggregates = new Dictionary<Guid, AggregateRoot>();

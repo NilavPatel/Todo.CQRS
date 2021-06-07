@@ -10,9 +10,9 @@ namespace Todo.Webapi.Controllers
     [ApiController]
     public class TodoItemQueryController : Controller
     {
-        private IBaseRepository<TodoContext, TodoItem> _todoItemRepository;
+        private IReadRepository<TodoContext, TodoItem> _todoItemRepository;
 
-        public TodoItemQueryController(IBaseRepository<TodoContext, TodoItem> todoItemRepository)
+        public TodoItemQueryController(IReadRepository<TodoContext, TodoItem> todoItemRepository)
         {
             this._todoItemRepository = todoItemRepository;
         }

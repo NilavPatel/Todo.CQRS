@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Framework.Aggregate;
 
-namespace Framework.UnitOfWork
+namespace Framework.Session
 {
-    public interface IUowRepository
+    public interface ISessionRepository
     {
         Task AddAsync<T>(T aggregate) where T : AggregateRoot;
 

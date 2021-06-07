@@ -6,7 +6,7 @@ using Framework.CommandBus;
 using Framework.Events;
 using Framework.EventStore;
 using Framework.Repository;
-using Framework.UnitOfWork;
+using Framework.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Framework.EventBus;
@@ -25,10 +25,11 @@ namespace Framework.Registrar
             services.AddScoped<ICommandBus, DefaultCommandBus>();
             services.AddScoped<IEventBus, DefaultEventBus>();
             services.AddScoped<IAggregateRepository, AggregateRepository>();
-            services.AddScoped<IUowRepository, UowRepository>();
+            services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
+            services.AddScoped(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
         }
 
         public static void RegisterCommandHandlers(this IServiceCollection services, string assemblyName)
