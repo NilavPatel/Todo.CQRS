@@ -44,6 +44,7 @@ namespace Todo.Application.EventHanders
                 todoItem.IsComplete = true;
                 todoItem.Version = @event.Version;
                 this._unitOfWork.Repository<TodoItem>().Update(todoItem);
+                await this._unitOfWork.SaveChangesAsync();
             }
         }
 
@@ -55,6 +56,7 @@ namespace Todo.Application.EventHanders
                 todoItem.IsComplete = false;
                 todoItem.Version = @event.Version;
                 this._unitOfWork.Repository<TodoItem>().Update(todoItem);
+                await this._unitOfWork.SaveChangesAsync();
             }
         }
 
@@ -66,6 +68,7 @@ namespace Todo.Application.EventHanders
                 todoItem.Title = @event.Title;
                 todoItem.Version = @event.Version;
                 this._unitOfWork.Repository<TodoItem>().Update(todoItem);
+                await this._unitOfWork.SaveChangesAsync();
             }
         }
     }
