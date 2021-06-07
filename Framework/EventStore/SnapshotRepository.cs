@@ -16,7 +16,7 @@ namespace Framework.EventStore
 
         public async Task<SnapshotEntity> GetAsync(Guid aggregateId)
         {
-            var snapshotEntity = await _dbContext.Set<SnapshotEntity>()
+            var snapshotEntity = await this._dbContext.Set<SnapshotEntity>()
                     .Where(x => x.AggregateId == aggregateId)
                     .OrderBy(e => e.AggregateVersion)
                     .LastOrDefaultAsync();
@@ -26,8 +26,8 @@ namespace Framework.EventStore
 
         public async Task SaveAsync(SnapshotEntity snapshot)
         {
-            await _dbContext.Set<SnapshotEntity>().AddAsync(snapshot);
-            await _dbContext.SaveChangesAsync();
+            await this._dbContext.Set<SnapshotEntity>().AddAsync(snapshot);
+            await this._dbContext.SaveChangesAsync();
         }
     }
 }

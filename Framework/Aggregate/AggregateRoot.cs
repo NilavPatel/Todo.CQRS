@@ -57,7 +57,7 @@ namespace Framework.Aggregate
 
         public void ClearDomainEvents()
         {
-            lock (_domainEvents)
+            lock (this._domainEvents)
             {
                 if (this.DomainEvents == null)
                 {

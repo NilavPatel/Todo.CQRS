@@ -49,7 +49,7 @@ namespace Framework.Aggregate
                 OccuredOn = e.OccuredOn
             });
 
-            await _eventrepository.SaveEventsAsync(events);
+            await this._eventrepository.SaveEventsAsync(events);
 
             if (SnapshotStrategy.ShouldMakeSnapshot(aggregate))
             {
@@ -62,7 +62,7 @@ namespace Framework.Aggregate
 
         public async Task<bool> ExistAsync(Guid aggregateId)
         {
-            return await _eventrepository.IsAnyEventExistAsync(aggregateId);
+            return await this._eventrepository.IsAnyEventExistAsync(aggregateId);
         }
 
         #region private methods
@@ -77,7 +77,7 @@ namespace Framework.Aggregate
             int snapshotVersion = await RestoreAggregateFromSnapshot<T>(aggregateId, aggregate);
             if (snapshotVersion == -1)
             {
-                var eventEntities = await _eventrepository.GetEventsAsync(aggregateId);
+                var eventEntities = await this._eventrepository.GetEventsAsync(aggregateId);
                 if (!eventEntities.Any())
                 {
                     throw new AggregateNotFoundException(typeof(T), aggregateId);
@@ -92,7 +92,7 @@ namespace Framework.Aggregate
             }
             else
             {
-                var eventEntities = await _eventrepository.GetEventsFromVersionAsync(aggregateId, snapshotVersion);
+                var eventEntities = await this._eventrepository.GetEventsFromVersionAsync(aggregateId, snapshotVersion);
                 if (eventEntities.Any())
                 {
                     var events = eventEntities.Select(e => TransformEvent(e));
@@ -135,7 +135,7 @@ namespace Framework.Aggregate
             }
             foreach (var @event in events)
             {
-                await _bus.PublishAsync(@event);
+                await this._bus.PublishAsync(@event);
             }
         }
         private async Task SaveSnapshot(IAggregateRoot aggregate)
@@ -150,14 +150,14 @@ namespace Framework.Aggregate
                 Data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(snapshot, _jsonSerializerSettings)),
                 CreatedOn = DateTime.Now
             };
-            await _snapshotRepository.SaveAsync(snapshotEntity);
+            await this._snapshotRepository.SaveAsync(snapshotEntity);
         }
 
         private async Task<int> RestoreAggregateFromSnapshot<T>(Guid id, IAggregateRoot aggregate)
         {
             if (!SnapshotStrategy.IsSnapshotable(aggregate.GetType()))
                 return -1;
-            var snapshotEntity = await _snapshotRepository.GetAsync(id);
+            var snapshotEntity = await this._snapshotRepository.GetAsync(id);
             if (snapshotEntity == null)
             {
                 return -1;

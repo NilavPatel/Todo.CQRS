@@ -11,12 +11,12 @@ namespace Framework.CommandBus
 
         public DefaultCommandBus(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            this._serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         public async Task<ICommandResult> SubmitAsync<TCommand>(TCommand command) where TCommand : ICommand
         {
-            var handler = _serviceProvider.GetService(typeof(ICommandHandler<TCommand>));
+            var handler = this._serviceProvider.GetService(typeof(ICommandHandler<TCommand>));
             if (handler == null)
             {
                 throw new CommandHandlerNotFoundException(typeof(TCommand));

@@ -15,6 +15,7 @@
 - Events and handlers (Projections)
 - Read models
 - Query controllers
+- Unit of Work, Read Repository, Write Repository
 - Command and event handler's auto dependency register
 - Unit of work for multiple aggregates
 - Snapshots and snapshot repository
@@ -31,6 +32,7 @@
 - All database updates are done from `EventHandler` only.
 - Use `IReadRepository` for query controllers.
 - Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`.
+- Use `IUnitOfWork` to update data in event handlers.
 
 ## Diagrams:
 

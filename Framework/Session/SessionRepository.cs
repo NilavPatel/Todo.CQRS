@@ -14,14 +14,14 @@ namespace Framework.Session
         public SessionRepository(IAggregateRepository aggregateRepository)
         {
             this._aggregateRepository = aggregateRepository ?? throw new ArgumentNullException(nameof(aggregateRepository));
-            _trackedAggregates = new Dictionary<Guid, AggregateRoot>();
+            this._trackedAggregates = new Dictionary<Guid, AggregateRoot>();
         }
 
         public async Task<T> GetAsync<T>(Guid id, int? version = null) where T : AggregateRoot
         {
             if (IsTracked(id))
             {
-                var trackedAggregate = (T)_trackedAggregates[id];
+                var trackedAggregate = (T)this._trackedAggregates[id];
                 if (version != null && trackedAggregate.Version != version)
                 {
                     throw new ConcurrencyException(trackedAggregate.Id);
@@ -29,7 +29,7 @@ namespace Framework.Session
                 return trackedAggregate;
             }
 
-            var aggregate = await _aggregateRepository.GetAsync<T>(id, version);
+            var aggregate = await this._aggregateRepository.GetAsync<T>(id, version);
             if (version != null && aggregate.Version != version)
             {
                 throw new ConcurrencyException(id);
@@ -43,9 +43,9 @@ namespace Framework.Session
         {
             if (!IsTracked(aggregate.Id))
             {
-                _trackedAggregates.Add(aggregate.Id, aggregate);
+                this._trackedAggregates.Add(aggregate.Id, aggregate);
             }
-            else if (_trackedAggregates[aggregate.Id] != aggregate)
+            else if (this._trackedAggregates[aggregate.Id] != aggregate)
             {
                 throw new ConcurrencyException(aggregate.Id);
             }
@@ -56,25 +56,25 @@ namespace Framework.Session
         {
             try
             {
-                foreach (var aggregate in _trackedAggregates.Values)
+                foreach (var aggregate in this._trackedAggregates.Values)
                 {
-                    await _aggregateRepository.SaveAsync(aggregate);
+                    await this._aggregateRepository.SaveAsync(aggregate);
                 }
             }
             finally
             {
-                _trackedAggregates.Clear();
+                this._trackedAggregates.Clear();
             }
         }
 
         private bool IsTracked(Guid id)
         {
-            return _trackedAggregates.ContainsKey(id);
+            return this._trackedAggregates.ContainsKey(id);
         }
 
         public async Task<bool> ExistAsync(Guid id)
         {
-            return await _aggregateRepository.ExistAsync(id);
+            return await this._aggregateRepository.ExistAsync(id);
         }
     }
 }

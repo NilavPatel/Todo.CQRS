@@ -17,7 +17,7 @@ namespace Framework.EventStore
 
         public async Task<IEnumerable<EventEntity>> GetEventsAsync(Guid aggregateId)
         {
-            return await _dbContext.Set<EventEntity>()
+            return await this._dbContext.Set<EventEntity>()
                             .Where(e => e.AggregateId == aggregateId)
                             .OrderBy(e => e.AggregateVersion)
                             .ToListAsync();
@@ -25,7 +25,7 @@ namespace Framework.EventStore
 
         public async Task<IEnumerable<EventEntity>> GetEventsFromVersionAsync(Guid aggregateId, int version)
         {
-            return await _dbContext.Set<EventEntity>()
+            return await this._dbContext.Set<EventEntity>()
                             .Where(e => e.AggregateId == aggregateId && e.AggregateVersion > version)
                             .OrderBy(e => e.AggregateVersion)
                             .ToListAsync();
@@ -35,23 +35,23 @@ namespace Framework.EventStore
         {
             foreach (var eve in events)
             {
-                await _dbContext.Set<EventEntity>().AddAsync(eve);
+                await this._dbContext.Set<EventEntity>().AddAsync(eve);
             }
-            return await _dbContext.SaveChangesAsync() > 0;
+            return await this._dbContext.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> IsAnyEventExistAsync(Guid aggregateId)
         {
-            return await _dbContext.Set<EventEntity>()
+            return await this._dbContext.Set<EventEntity>()
                 .AnyAsync(e => e.AggregateId == aggregateId);
         }
 
         public async Task MarkEventAsSuccessAsync(Guid eventId)
         {
-            var eve = await _dbContext.Set<EventEntity>()
+            var eve = await this._dbContext.Set<EventEntity>()
                             .FirstAsync(e => e.EventId == eventId);
             eve.Success = true;
-            await _dbContext.SaveChangesAsync();
+            await this._dbContext.SaveChangesAsync();
         }
     }
 }

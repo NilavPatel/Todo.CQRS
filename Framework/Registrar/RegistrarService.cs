@@ -30,6 +30,7 @@ namespace Framework.Registrar
             services.AddScoped<ISnapshotRepository, SnapshotRepository>();
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
+            services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
         }
 
         public static void RegisterCommandHandlers(this IServiceCollection services, string assemblyName)
