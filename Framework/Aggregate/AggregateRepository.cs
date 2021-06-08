@@ -16,13 +16,13 @@ namespace Framework.Aggregate
     public class AggregateRepository : IAggregateRepository
     {
         private readonly ISnapshotRepository _snapshotRepository;
-        private readonly IEventRepository _eventrepository;
+        private readonly IEventRepository _eventRepository;
         private readonly IEventBus _bus;
 
-        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventRepository eventrepository, IEventBus bus)
+        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventRepository eventRepository, IEventBus bus)
         {
             this._snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
-            this._eventrepository = eventrepository ?? throw new ArgumentNullException(nameof(eventrepository));
+            this._eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
             this._bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
@@ -49,7 +49,7 @@ namespace Framework.Aggregate
                 OccuredOn = e.OccuredOn
             });
 
-            await this._eventrepository.SaveEventsAsync(events);
+            await this._eventRepository.SaveEventsAsync(events);
 
             if (SnapshotStrategy.ShouldMakeSnapshot(aggregate))
             {
@@ -62,7 +62,7 @@ namespace Framework.Aggregate
 
         public async Task<bool> ExistAsync(Guid aggregateId)
         {
-            return await this._eventrepository.IsAnyEventExistAsync(aggregateId);
+            return await this._eventRepository.IsAnyEventExistAsync(aggregateId);
         }
 
         #region private methods
@@ -77,7 +77,7 @@ namespace Framework.Aggregate
             int snapshotVersion = await RestoreAggregateFromSnapshot<T>(aggregateId, aggregate);
             if (snapshotVersion == -1)
             {
-                var eventEntities = await this._eventrepository.GetEventsAsync(aggregateId);
+                var eventEntities = await this._eventRepository.GetEventsAsync(aggregateId);
                 if (!eventEntities.Any())
                 {
                     throw new AggregateNotFoundException(typeof(T), aggregateId);
@@ -92,7 +92,7 @@ namespace Framework.Aggregate
             }
             else
             {
-                var eventEntities = await this._eventrepository.GetEventsFromVersionAsync(aggregateId, snapshotVersion);
+                var eventEntities = await this._eventRepository.GetEventsFromVersionAsync(aggregateId, snapshotVersion);
                 if (eventEntities.Any())
                 {
                     var events = eventEntities.Select(e => TransformEvent(e));

@@ -10,6 +10,7 @@ namespace Framework.Repository
         private TContext _dbContext;
         private readonly IServiceProvider _serviceProvider;
         private IDictionary<Type, dynamic> _repositories;
+        private bool _disposed = false;
 
         public UnitOfWork(TContext dbContext, IServiceProvider serviceProvider)
         {
@@ -37,7 +38,11 @@ namespace Framework.Repository
 
         public async void Dispose()
         {
-            await this._dbContext.DisposeAsync();
+            if (!this._disposed)
+            {
+                await this._dbContext.DisposeAsync();
+                this._disposed = true;
+            }
         }
     }
 }
