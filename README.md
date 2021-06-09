@@ -12,10 +12,11 @@
 - Domain models (Aggregates)
 - Aggregate repository
 - Event sourcing
-- Events and handlers (Projections)
+- Domain events and handlers (Projections)
+- Integration events and handlers (Cross module projections)
 - Read models
 - Query controllers
-- Unit of Work, Read Repository, Write Repository
+- Unit of work, Read repository, Write repository
 - Command and event handler's auto dependency register
 - Unit of work for multiple aggregates
 - Snapshots and snapshot repository

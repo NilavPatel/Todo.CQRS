@@ -17,9 +17,9 @@ namespace Framework.Aggregate
     {
         private readonly ISnapshotRepository _snapshotRepository;
         private readonly IEventRepository _eventRepository;
-        private readonly IEventBus _bus;
+        private readonly IDomainEventBus _bus;
 
-        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventRepository eventRepository, IEventBus bus)
+        public AggregateRepository(ISnapshotRepository snapshotRepository, IEventRepository eventRepository, IDomainEventBus bus)
         {
             this._snapshotRepository = snapshotRepository ?? throw new ArgumentNullException(nameof(snapshotRepository));
             this._eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));

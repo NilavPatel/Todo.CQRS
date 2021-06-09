@@ -7,10 +7,10 @@ using Framework.Repository;
 namespace Todo.Application.EventHanders
 {
     public class TodoItemEventHandler :
-        IEventHandler<TodoItemCreated>,
-        IEventHandler<TodoItemMarkedAsComplete>,
-        IEventHandler<TodoItemMarkedAsUnComplete>,
-        IEventHandler<TodoItemTitleUpdated>
+        IDomainEventHandler<TodoItemCreated>,
+        IDomainEventHandler<TodoItemMarkedAsComplete>,
+        IDomainEventHandler<TodoItemMarkedAsUnComplete>,
+        IDomainEventHandler<TodoItemTitleUpdated>
     {
         private IUnitOfWork<TodoContext> _unitOfWork;
 

@@ -3,7 +3,7 @@ using Framework.Events;
 
 namespace Framework.EventBus
 {
-    public interface IEventBus
+    public interface IDomainEventBus
     {
         Task PublishAsync<TEvent>(TEvent @event) where TEvent : IEvent;
     }

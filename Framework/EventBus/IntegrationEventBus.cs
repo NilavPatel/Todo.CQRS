@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,12 +8,12 @@ using Framework.Events;
 
 namespace Framework.EventBus
 {
-    public class DefaultEventBus : IEventBus
+    public class IntegrationEventBus : IIntegrationEventBus
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IEventRepository _eventRepository;
 
-        public DefaultEventBus(IServiceProvider serviceProvider, IEventRepository eventRepository)
+        public IntegrationEventBus(IServiceProvider serviceProvider, IEventRepository eventRepository)
         {
             this._serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             this._eventRepository = eventRepository ?? throw new ArgumentNullException(nameof(eventRepository));
@@ -21,7 +21,7 @@ namespace Framework.EventBus
 
         public async Task PublishAsync<TEvent>(TEvent eve) where TEvent : IEvent
         {
-            var type = typeof(IEventHandler<>).MakeGenericType(eve.GetType());
+            var type = typeof(IIntegrationEventHandler<>).MakeGenericType(eve.GetType());
             var subscribers = this._serviceProvider.GetServices(type);
             if (subscribers == null || subscribers.Count() == 0)
             {

@@ -23,7 +23,8 @@ namespace Framework.Registrar
         public static void RegisterFrameworkServices(this IServiceCollection services)
         {
             services.AddScoped<ICommandBus, DefaultCommandBus>();
-            services.AddScoped<IEventBus, DefaultEventBus>();
+            services.AddScoped<IDomainEventBus, DomainEventBus>();
+            services.AddScoped<IIntegrationEventBus, IntegrationEventBus>();
             services.AddScoped<IAggregateRepository, AggregateRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
@@ -51,17 +52,34 @@ namespace Framework.Registrar
             }
         }
 
-        public static void RegisterEventHandlers(this IServiceCollection services, string assemblyName)
+        public static void RegisterDomainEventHandlers(this IServiceCollection services, string assemblyName)
         {
             var assembly = Assembly.Load(assemblyName);
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
-                         .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>)));
+                         .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)));
 
             foreach (var handler in handlers)
             {
                 var interfaces = handler.GetInterfaces()
-                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEventHandler<>));
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>));
+                foreach (var i in interfaces)
+                {
+                    services.AddScoped(i, handler);
+                }
+            }
+        }
+        public static void RegisterIntegrationEventHandlers(this IServiceCollection services, string assemblyName)
+        {
+            var assembly = Assembly.Load(assemblyName);
+            var handlers = assembly.GetTypes()
+                         .Where(t => t.GetInterfaces()
+                         .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>)));
+
+            foreach (var handler in handlers)
+            {
+                var interfaces = handler.GetInterfaces()
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIntegrationEventHandler<>));
                 foreach (var i in interfaces)
                 {
                     services.AddScoped(i, handler);

@@ -35,7 +35,7 @@ namespace Todo.Webapi
             services.RegisterFrameworkServices();
             services.AddEventStoreDbContext(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=EventStore;User Id=sa;Password=satest12@;");
             services.RegisterCommandHandlers("Todo.Application");
-            services.RegisterEventHandlers("Todo.Application");
+            services.RegisterDomainEventHandlers("Todo.Application");
 
             services.AddDbContext<TodoContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;"));
         }
