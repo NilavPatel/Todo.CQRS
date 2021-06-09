@@ -10,9 +10,13 @@ namespace Framework.Repository
     {
         private readonly TContext _dbContext;
 
-        public ReadRepository(TContext dbContext)
+        public ReadRepository(TContext dbContext, bool disableTracking = true)
         {
             this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            if (disableTracking)
+            {
+                this._dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            }
         }
 
         public async virtual Task<T> GetByIdAsync(Guid id)

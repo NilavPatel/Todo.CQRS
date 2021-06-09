@@ -8,7 +8,7 @@ namespace Framework.Repository
     {
         private readonly TContext _dbContext;
 
-        public BaseRepository(TContext dbContext) : base(dbContext)
+        public BaseRepository(TContext dbContext) : base(dbContext, false)
         {
             this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
