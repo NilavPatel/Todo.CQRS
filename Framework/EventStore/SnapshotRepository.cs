@@ -18,8 +18,8 @@ namespace Framework.EventStore
         {
             var snapshotEntity = await this._dbContext.Set<SnapshotEntity>()
                     .Where(x => x.AggregateId == aggregateId)
-                    .OrderBy(e => e.AggregateVersion)
-                    .LastOrDefaultAsync();
+                    .OrderByDescending(e => e.AggregateVersion)
+                    .FirstOrDefaultAsync();
 
             return snapshotEntity;
         }

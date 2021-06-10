@@ -36,7 +36,7 @@ namespace Framework.Repository
             await this._dbContext.SaveChangesAsync();
         }
 
-        public async void Dispose()
+        public async ValueTask DisposeAsync()
         {
             if (!this._disposed)
             {

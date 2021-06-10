@@ -21,7 +21,7 @@ namespace Todo.Application.EventHanders
 
         public async Task HandleAsync(TodoItemCreated @event)
         {
-            using (this._unitOfWork)
+            await using (this._unitOfWork)
             {
                 var todoItem = new TodoItem
                 {
@@ -38,7 +38,7 @@ namespace Todo.Application.EventHanders
 
         public async Task HandleAsync(TodoItemMarkedAsComplete @event)
         {
-            using (this._unitOfWork)
+            await using (this._unitOfWork)
             {
                 var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
                 todoItem.IsComplete = true;
@@ -50,7 +50,7 @@ namespace Todo.Application.EventHanders
 
         public async Task HandleAsync(TodoItemMarkedAsUnComplete @event)
         {
-            using (this._unitOfWork)
+            await using (this._unitOfWork)
             {
                 var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
                 todoItem.IsComplete = false;
@@ -62,7 +62,7 @@ namespace Todo.Application.EventHanders
 
         public async Task HandleAsync(TodoItemTitleUpdated @event)
         {
-            using (this._unitOfWork)
+            await using (this._unitOfWork)
             {
                 var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
                 todoItem.Title = @event.Title;
