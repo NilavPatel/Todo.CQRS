@@ -33,7 +33,7 @@ namespace Todo.Webapi
             // Add event store db context and 
             // Register command handlers, event handlers
             services.RegisterFrameworkServices();
-            services.AddEventStoreDbContext(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=EventStore;User Id=sa;Password=satest12@;");
+            services.RegisterEventStore(Configuration);
             services.RegisterCommandHandlers("Todo.Application");
             services.RegisterDomainEventHandlers("Todo.Application");
 

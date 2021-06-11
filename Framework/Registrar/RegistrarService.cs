@@ -1,23 +1,32 @@
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Framework.Aggregate;
 using Framework.Commands;
 using Framework.CommandBus;
 using Framework.Events;
-using Framework.EventStore;
 using Framework.Repository;
 using Framework.Session;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Framework.EventBus;
+using Framework.Snapshotting;
+using Framework.EventStore;
+using EventStore.ClientAPI;
 
 namespace Framework.Registrar
 {
     public static class RegistrarService
     {
-        public static void AddEventStoreDbContext(this IServiceCollection services, string connectionString)
+        public static void RegisterEventStore(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<EventStoreContext>(options => options.UseSqlServer(connectionString));
+            var eventStoreConnection = EventStoreConnection.Create(
+                connectionString: configuration.GetValue<string>("EventStore:ConnectionString"),
+                builder: ConnectionSettings.Create().KeepReconnecting(),
+                connectionName: configuration.GetValue<string>("EventStore:ConnectionName"));
+
+            eventStoreConnection.ConnectAsync().GetAwaiter().GetResult();
+
+            services.AddSingleton(eventStoreConnection);
         }
 
         public static void RegisterFrameworkServices(this IServiceCollection services)

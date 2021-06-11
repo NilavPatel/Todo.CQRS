@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Framework.EventBus;
 using Framework.Events;
 using Framework.EventStore;
 using Framework.Exceptions;
-using Framework.Generators;
 using Framework.Snapshotting;
-using Newtonsoft.Json;
 
 namespace Framework.Aggregate
 {
@@ -38,22 +34,12 @@ namespace Framework.Aggregate
                 return;
             }
 
-            var events = aggregate.DomainEvents.Select(e => new EventEntity
-            {
-                EventId = e.EventId,
-                AggregateId = e.SourceId,
-                AggregateVersion = e.Version,
-                AggregateName = aggregate.GetType().FullName,
-                EventName = e.GetType().FullName,
-                Data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e, _jsonSerializerSettings)),
-                OccuredOn = e.OccuredOn
-            });
-
-            await this._eventRepository.SaveEventsAsync(events);
+            await this._eventRepository.SaveAsync(aggregate);
 
             if (SnapshotStrategy.ShouldMakeSnapshot(aggregate))
             {
-                await SaveSnapshot(aggregate);
+                var snapshot = ((dynamic)aggregate).GetSnapshot();
+                await this._snapshotRepository.SaveAsync(snapshot);
             }
 
             await PublishEvents(aggregate.DomainEvents);
@@ -62,7 +48,8 @@ namespace Framework.Aggregate
 
         public async Task<bool> ExistAsync(Guid aggregateId)
         {
-            return await this._eventRepository.IsAnyEventExistAsync(aggregateId);
+            var events = await this._eventRepository.GetEvents(aggregateId);
+            return events != null ? true : false;
         }
 
         #region private methods
@@ -74,97 +61,52 @@ namespace Framework.Aggregate
             }
             var aggregate = AggregateFactory<T>.CreateAggregate();
 
-            int snapshotVersion = await RestoreAggregateFromSnapshot<T>(aggregateId, aggregate);
-            if (snapshotVersion == -1)
+            int snapshotVersion = await RestoreAggregateFromSnapshot(aggregateId, aggregate);
+            if (snapshotVersion != -1)
             {
-                var eventEntities = await this._eventRepository.GetEventsAsync(aggregateId);
-                if (!eventEntities.Any())
+                var remainingEvents = await this._eventRepository.GetEvents(aggregateId, snapshotVersion + 1);
+                if (remainingEvents != null)
                 {
-                    throw new AggregateNotFoundException(typeof(T), aggregateId);
+                    aggregate.LoadFromHistory(remainingEvents);
                 }
-
-                var events = eventEntities.Select(e => TransformEvent(e));
-                aggregate.LoadFromHistory(events);
                 if (aggregateVersion != null && aggregate.Version != aggregateVersion)
                 {
                     throw new ConcurrencyException(aggregateId);
                 }
+                return aggregate;
             }
-            else
+            var allEvents = await this._eventRepository.GetEvents(aggregateId);
+            if (allEvents == null)
             {
-                var eventEntities = await this._eventRepository.GetEventsFromVersionAsync(aggregateId, snapshotVersion);
-                if (eventEntities.Any())
-                {
-                    var events = eventEntities.Select(e => TransformEvent(e));
-                    aggregate.LoadFromHistory(events);
-                    if (aggregateVersion != null && aggregate.Version != aggregateVersion)
-                    {
-                        throw new ConcurrencyException(aggregateId);
-                    }
-                }
+                throw new AggregateNotFoundException(typeof(T), aggregateId);
             }
-
+            aggregate.LoadFromHistory(allEvents);
+            if (aggregateVersion != null && aggregate.Version != aggregateVersion)
+            {
+                throw new ConcurrencyException(aggregateId);
+            }
             return aggregate;
         }
 
-        private static IEvent TransformEvent(EventEntity eventSelected)
-        {
-            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(eventSelected.Data), _jsonSerializerSettings);
-            var evt = o as IEvent;
-            return evt;
-        }
-
-        private static Snapshot TransformSnapshot(SnapshotEntity snapShotEntity)
-        {
-            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(snapShotEntity.Data), _jsonSerializerSettings);
-            var snap = o as Snapshot;
-            return snap;
-        }
-
-        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            NullValueHandling = NullValueHandling.Ignore
-        };
-
         private async Task PublishEvents(IReadOnlyCollection<IEvent> events)
         {
-            if (events == null)
-            {
-                return;
-            }
             foreach (var @event in events)
             {
                 await this._bus.PublishAsync(@event);
             }
         }
-        private async Task SaveSnapshot(IAggregateRoot aggregate)
-        {
-            dynamic snapshot = ((dynamic)aggregate).GetSnapshot();
-            var snapshotEntity = new SnapshotEntity
-            {
-                SnapshotId = CombGuid.NewGuid(),
-                AggregateId = snapshot.Id,
-                AggregateVersion = snapshot.Version,
-                SnapshotName = snapshot.GetType().FullName,
-                Data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(snapshot, _jsonSerializerSettings)),
-                CreatedOn = DateTime.Now
-            };
-            await this._snapshotRepository.SaveAsync(snapshotEntity);
-        }
 
-        private async Task<int> RestoreAggregateFromSnapshot<T>(Guid id, IAggregateRoot aggregate)
+        private async Task<int> RestoreAggregateFromSnapshot(Guid aggregateId, IAggregateRoot aggregate)
         {
             if (!SnapshotStrategy.IsSnapshotable(aggregate.GetType()))
                 return -1;
-            var snapshotEntity = await this._snapshotRepository.GetAsync(id);
-            if (snapshotEntity == null)
+            var snapshot = await this._snapshotRepository.GetAsync(aggregateId);
+            if (snapshot == null)
             {
                 return -1;
             }
-            var snapshot = TransformSnapshot(snapshotEntity);
             ((dynamic)aggregate).Restore((dynamic)snapshot);
-            return snapshot.Version;
+            return aggregate.Version;
         }
         #endregion
     }

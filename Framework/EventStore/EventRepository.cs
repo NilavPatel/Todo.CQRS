@@ -1,57 +1,54 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using EventStore.ClientAPI;
+using Framework.Aggregate;
+using Framework.Events;
+using Newtonsoft.Json;
 
 namespace Framework.EventStore
 {
     public class EventRepository : IEventRepository
     {
-        private readonly EventStoreContext _dbContext;
+        private readonly IEventStoreConnection _eventStore;
 
-        public EventRepository(EventStoreContext dbContext)
+        public EventRepository(IEventStoreConnection eventStore)
         {
-            this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            this._eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
         }
 
-        public async Task<IEnumerable<EventEntity>> GetEventsAsync(Guid aggregateId)
+        public async Task SaveAsync(IAggregateRoot aggregate)
         {
-            return await this._dbContext.Set<EventEntity>()
-                            .Where(e => e.AggregateId == aggregateId)
-                            .OrderBy(e => e.AggregateVersion)
-                            .ToListAsync();
+            var data = aggregate.DomainEvents.Select(e =>
+                new EventData(e.EventId, e.GetType().FullName, false, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e, _jsonSerializerSettings)), null)
+            );
+
+            await this._eventStore.AppendToStreamAsync(aggregate.Id.ToString(), aggregate.Version, data);
         }
 
-        public async Task<IEnumerable<EventEntity>> GetEventsFromVersionAsync(Guid aggregateId, int version)
+        public async Task<IEnumerable<IEvent>> GetEvents(Guid aggregateId, int? expectedVersion = null)
         {
-            return await this._dbContext.Set<EventEntity>()
-                            .Where(e => e.AggregateId == aggregateId && e.AggregateVersion > version)
-                            .OrderBy(e => e.AggregateVersion)
-                            .ToListAsync();
-        }
-
-        public async Task<bool> SaveEventsAsync(IEnumerable<EventEntity> events)
-        {
-            foreach (var eve in events)
+            var page = await this._eventStore.ReadStreamEventsForwardAsync(aggregateId.ToString(), expectedVersion ?? StreamPosition.Start, 4096, false);
+            if (page.Status == SliceReadStatus.StreamNotFound)
             {
-                await this._dbContext.Set<EventEntity>().AddAsync(eve);
+                return null;
             }
-            return await this._dbContext.SaveChangesAsync() > 0;
+            return page.Events.Select(e => TransformEvent(e));
         }
 
-        public async Task<bool> IsAnyEventExistAsync(Guid aggregateId)
+        private static IEvent TransformEvent(ResolvedEvent @event)
         {
-            return await this._dbContext.Set<EventEntity>()
-                .AnyAsync(e => e.AggregateId == aggregateId);
+            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(@event.OriginalEvent.Data), _jsonSerializerSettings);
+            var evt = o as IEvent;
+            return evt;
         }
 
-        public async Task MarkEventAsSuccessAsync(Guid eventId)
+        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
         {
-            var eve = await this._dbContext.Set<EventEntity>()
-                            .FirstAsync(e => e.EventId == eventId);
-            eve.Success = true;
-            await this._dbContext.SaveChangesAsync();
-        }
+            TypeNameHandling = TypeNameHandling.All,
+            NullValueHandling = NullValueHandling.Ignore
+        };
     }
 }

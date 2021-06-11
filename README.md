@@ -11,7 +11,7 @@
 - Commands and handlers
 - Domain models (Aggregates)
 - Aggregate repository
-- Event sourcing
+- Event sourcing using [EventStore](https://www.eventstore.com/)
 - Domain events and handlers (Projections)
 - Integration events and handlers (Cross module projections)
 - Read models
@@ -40,4 +40,3 @@
 
 ![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Docs/CQRS.png)
 ![AggregateRepository-GetAggregate](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Docs/AggregateRepository-GetAggregate.png)
-

@@ -1,15 +1,15 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Framework.Events;
+using Framework.Aggregate;
 
 namespace Framework.EventStore
 {
     public interface IEventRepository
     {
-        Task<bool> SaveEventsAsync(IEnumerable<EventEntity> events);
-        Task<IEnumerable<EventEntity>> GetEventsAsync(Guid aggregateId);
-        Task<IEnumerable<EventEntity>> GetEventsFromVersionAsync(Guid aggregateId, int version);
-        Task<bool> IsAnyEventExistAsync(Guid aggregateId);
-        Task MarkEventAsSuccessAsync(Guid eventId);
+        Task SaveAsync(IAggregateRoot aggregate);
+
+        Task<IEnumerable<IEvent>> GetEvents(Guid aggregateId, int? expectedVersion = null);
     }
 }
