@@ -13,6 +13,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework", "Framework\Fram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Application", "Modules\Todo\Todo.Application\Todo.Application.csproj", "{0CA21970-67F9-4361-9C55-F127139CD44B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{32534263-66C1-46E9-94C2-56D2CB55175B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Todo", "Todo", "{BFDD3F98-6EBB-45B5-9DB5-D0F347690E0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.BackgroundProcessor", "Modules\Todo\Todo.BackgroundProcessor\Todo.BackgroundProcessor.csproj", "{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,5 +92,21 @@ Global
 		{0CA21970-67F9-4361-9C55-F127139CD44B}.Release|x64.Build.0 = Release|Any CPU
 		{0CA21970-67F9-4361-9C55-F127139CD44B}.Release|x86.ActiveCfg = Release|Any CPU
 		{0CA21970-67F9-4361-9C55-F127139CD44B}.Release|x86.Build.0 = Release|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Debug|x64.Build.0 = Debug|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Debug|x86.Build.0 = Debug|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Release|x64.ActiveCfg = Release|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Release|x64.Build.0 = Release|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Release|x86.ActiveCfg = Release|Any CPU
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BFDD3F98-6EBB-45B5-9DB5-D0F347690E0F} = {32534263-66C1-46E9-94C2-56D2CB55175B}
+		{7FA560DC-0116-40EF-9CE0-DDCE54D82CBF} = {BFDD3F98-6EBB-45B5-9DB5-D0F347690E0F}
 	EndGlobalSection
 EndGlobal

@@ -3,10 +3,10 @@
 1. Install [Chocolatey](https://docs.chocolatey.org/en-us/choco/setup)
 2. Run below command in CMD with administrative rights  
    `choco install eventstore-oss`
-3. Create below folders
-   C:\ESDB\Data
-   C:\ESDB\Index
-   C:\ESDB\Logs
+3. Create below folders  
+   C:\ESDB\Data  
+   C:\ESDB\Index  
+   C:\ESDB\Logs  
 4. Add config file `C:\ESDB\eventstore.conf` with below content
 
 ```javascript

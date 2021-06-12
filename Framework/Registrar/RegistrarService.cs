@@ -12,6 +12,7 @@ using Framework.EventBus;
 using Framework.Snapshotting;
 using Framework.EventStore;
 using EventStore.ClientAPI;
+using Framework.BackgroundProcessor;
 
 namespace Framework.Registrar
 {
@@ -41,6 +42,7 @@ namespace Framework.Registrar
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
             services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+            services.AddScoped<IBackgroundEventProcessor, BackgroundEventProcessor>();
         }
 
         public static void RegisterCommandHandlers(this IServiceCollection services, string assemblyName)

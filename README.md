@@ -1,9 +1,7 @@
 # CQRS + ES + DDD + .NET 5.0
 
 `CQRS` stands for **Command and Query Responsibility Segregation**
-
 `ES` stands for **Event Sourcing**
-
 `DDD` stands for **Domain Driven Design**
 
 ## Features
@@ -17,7 +15,7 @@
 - Read models
 - Query controllers
 - Unit of work, Read repository, Write repository
-- Command and event handler's auto dependency register
+- Auto registration of commands, events and their handlers
 - Unit of work for multiple aggregates
 - Snapshots and snapshot repository
 - Class for sequential GUIDs
@@ -35,6 +33,7 @@
 - Use `IReadRepository` for query controllers.
 - Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`.
 - Use `IUnitOfWork` to update data in event handlers.
+- Start background processor before starting web app
 
 ## [How to configure Eventstore?](https://github.com/NilavPatel/Todo.CQRS/blob/main/Docs/EventStore_Config.md)
 

@@ -1,12 +1,15 @@
 {
-    "name": "todo.cqrs",
-    "private": false,
-    "version": "1.0.0",
-    "scripts": {
-        "start:Todo.Webapi": "dotnet run --project Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
-        "build:Todo.Webapi": "dotnet build Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
-        "publish:Todo.Webapi": "dotnet publish Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
-        "clean": "dotnet clean",
-        "restore": "dotnet restore"
-    }
+  "name": "todo.cqrs",
+  "private": false,
+  "version": "1.0.0",
+  "scripts": {
+    "start:Todo.Webapi": "dotnet run --project Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
+    "build:Todo.Webapi": "dotnet build Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
+    "publish:Todo.Webapi": "dotnet publish Modules/Todo/Todo.Webapi/Todo.Webapi.csproj",
+    "clean": "dotnet clean",
+    "restore": "dotnet restore",
+    "start:Todo.BackgroundProcessor": "dotnet run --project Modules/Todo/Todo.BackgroundProcessor/Todo.BackgroundProcessor.csproj",
+    "build:Todo.BackgroundProcessor": "dotnet build Modules/Todo/Todo.BackgroundProcessor/Todo.BackgroundProcessor.csproj",
+    "publish:Todo.BackgroundProcessor": "dotnet publish Modules/Todo/Todo.BackgroundProcessor/Todo.BackgroundProcessor.csproj"
+  }
 }
