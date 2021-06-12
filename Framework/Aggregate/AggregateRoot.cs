@@ -13,7 +13,8 @@ namespace Framework.Aggregate
         public IReadOnlyCollection<IEvent> DomainEvents => _domainEvents?.AsReadOnly();
 
         public Guid Id { get; protected set; }
-        public int Version { get; protected set; }
+        // Note: Eventstore has version start with 0, so base value is set as -1, else it will be set to 0.
+        public int Version { get; protected set; } = -1;
 
         public void ApplyEvent(IEvent @event)
         {

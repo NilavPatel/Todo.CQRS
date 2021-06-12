@@ -10,6 +10,6 @@ namespace Framework.EventStore
     {
         Task SaveAsync(IAggregateRoot aggregate);
 
-        Task<IEnumerable<IEvent>> GetEvents(Guid aggregateId, int? expectedVersion = null);
+        Task<IEnumerable<IEvent>> GetEvents(Guid aggregateId, int? startVersion = null);
     }
 }

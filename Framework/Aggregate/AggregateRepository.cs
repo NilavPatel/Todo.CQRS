@@ -55,7 +55,8 @@ namespace Framework.Aggregate
         #region private methods
         private async Task<T> LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
         {
-            if (aggregateVersion <= 0)
+            // Note: Eventstore has version start with 0 else it will check for value greather than 1.
+            if (aggregateVersion < 0)
             {
                 throw new AggregateVersionIncorrectException();
             }

@@ -22,15 +22,19 @@ namespace Framework.EventStore
         public async Task SaveAsync(IAggregateRoot aggregate)
         {
             var data = aggregate.DomainEvents.Select(e =>
-                new EventData(e.EventId, e.GetType().FullName, false, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e, _jsonSerializerSettings)), null)
+                new EventData(e.EventId,
+                    e.GetType().Name,
+                    true,
+                    Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e, _jsonSerializerSettings)),
+                    Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new EventMetadata() { FullName = e.GetType().FullName }, _jsonSerializerSettings))
+                )
             );
-
-            await this._eventStore.AppendToStreamAsync(aggregate.Id.ToString(), aggregate.Version, data);
+            await this._eventStore.AppendToStreamAsync(aggregate.Id.ToString(), aggregate.Version - 1, data);
         }
 
-        public async Task<IEnumerable<IEvent>> GetEvents(Guid aggregateId, int? expectedVersion = null)
+        public async Task<IEnumerable<IEvent>> GetEvents(Guid aggregateId, int? startVersion = null)
         {
-            var page = await this._eventStore.ReadStreamEventsForwardAsync(aggregateId.ToString(), expectedVersion ?? StreamPosition.Start, 4096, false);
+            var page = await this._eventStore.ReadStreamEventsForwardAsync(aggregateId.ToString(), startVersion ?? StreamPosition.Start, 4096, false);
             if (page.Status == SliceReadStatus.StreamNotFound)
             {
                 return null;
