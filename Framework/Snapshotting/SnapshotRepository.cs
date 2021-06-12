@@ -20,7 +20,7 @@ namespace Framework.Snapshotting
         public async Task<Snapshot> GetAsync(Guid aggregateId)
         {
             var snapshotStreamName = GetStreamName(aggregateId);
-            var page = await this._eventStore.ReadStreamEventsBackwardAsync(snapshotStreamName, 0, 1, false);
+            var page = await this._eventStore.ReadStreamEventsBackwardAsync(snapshotStreamName, StreamPosition.End, 1, false);
             if (page.Status == SliceReadStatus.StreamNotFound)
             {
                 return null;
@@ -38,7 +38,7 @@ namespace Framework.Snapshotting
                 Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(snapshot, _jsonSerializerSettings)),
                 Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new EventMetadata() { FullName = snapshot.GetType().FullName }, _jsonSerializerSettings))
             );
-            await this._eventStore.AppendToStreamAsync(streamName, snapshot.Version - 1, data);
+            await this._eventStore.AppendToStreamAsync(streamName, ExpectedVersion.Any, data);
         }
 
         private string GetStreamName(Guid id) => $"Snapshot-{id}";

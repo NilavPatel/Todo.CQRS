@@ -36,6 +36,8 @@
 - Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`.
 - Use `IUnitOfWork` to update data in event handlers.
 
+## [How to configure Eventstore?](https://github.com/NilavPatel/Todo.CQRS/blob/main/Docs/EventStore_Config.md)
+
 ## Diagrams:
 
 ![CQRS](https://raw.githubusercontent.com/NilavPatel/Todo.CQRS/main/Docs/CQRS.png)
