@@ -16,22 +16,22 @@ namespace Todo.Application.EventHanders
 
         public async Task HandleAsync(TodoItemCreated @event)
         {
-            
+            await Task.Delay(500);
         }
 
         public async Task HandleAsync(TodoItemMarkedAsComplete @event)
         {
-
+            await Task.Delay(500);
         }
 
         public async Task HandleAsync(TodoItemMarkedAsUnComplete @event)
         {
-
+            await Task.Delay(500);
         }
 
         public async Task HandleAsync(TodoItemTitleUpdated @event)
         {
-
+            await Task.Delay(500);
         }
     }
 }

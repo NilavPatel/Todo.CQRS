@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using Framework.EventBus;
 using Framework.Events;
@@ -20,32 +21,27 @@ namespace Framework.BackgroundProcessor
 
         public void Start()
         {
-            var settings = new CatchUpSubscriptionSettings(
-                maxLiveQueueSize: 10000,
-                readBatchSize: 500,
-                verboseLogging: false,
-                resolveLinkTos: true,
-                subscriptionName: "mySubscription"
-            );
+            //var lastCheckpoint = checkpointStore.Load("todo-checkpoint");
 
             _eventStore.SubscribeToAllFrom(
-                Position.Start,
-                settings,
-                eventAppeared: (sub, evt) => ProcessEvent(evt)
-            );
+                lastCheckpoint: AllCheckpoint.AllStart,
+                settings: CatchUpSubscriptionSettings.Default,
+                eventAppeared: EventAppeared);
         }
 
-        private void ProcessEvent(ResolvedEvent resolvedEvent)
+        public Task EventAppeared(EventStoreCatchUpSubscription _, ResolvedEvent resolvedEvent)
         {
             if (resolvedEvent.Event.EventStreamId.Contains("$"))
             {
-                return;
+                return Task.CompletedTask;
             }
             var @event = TransformEvent(resolvedEvent);
             if (@event != null)
             {
                 this._bus.PublishAsync(@event).ConfigureAwait(false);
             }
+            //checkpointStore.Save(resolvedEvent.OriginalPosition.Value);
+            return Task.CompletedTask;
         }
 
         private static IEvent TransformEvent(ResolvedEvent @event)

@@ -6,11 +6,10 @@
 3. Create below folders  
    C:\ESDB\Data  
    C:\ESDB\Index  
-   C:\ESDB\Logs  
+   C:\ESDB\Logs
 4. Add config file `C:\ESDB\eventstore.conf` with below content
 
 ```javascript
----
 # Paths
 Db: C:\ESDB\Data
 Index: C:\ESDB\Index
@@ -32,5 +31,5 @@ EnableAtomPubOverHTTP: true
 RunProjections: None
 ```
 
-5. Run command `EventStore.ClusterNode.exe --config C:\ESDB\eventstore.conf`
+5. Run command `EventStore.ClusterNode.exe --config C:\ESDB\eventstore.conf` in CMD with administrative rights
 6. Open URL http://localhost:2113/web/index.html#/dashboard
