@@ -2,6 +2,6 @@ namespace Framework.BackgroundProcessor
 {
     public interface IBackgroundEventProcessor
     {
-        void Start();
+        void Start(string module);
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using EventStore.ClientAPI;
+using Framework.CheckpointStore;
 using Framework.EventBus;
 using Framework.Events;
 using Newtonsoft.Json;
@@ -12,36 +13,49 @@ namespace Framework.BackgroundProcessor
     {
         private readonly IIntegrationEventBus _bus;
         private readonly IEventStoreConnection _eventStore;
+        private readonly ICheckpointRepository _checkpointStore;
+        private string _module;
 
-        public BackgroundEventProcessor(IIntegrationEventBus bus, IEventStoreConnection eventStore)
+        public BackgroundEventProcessor(IIntegrationEventBus bus, IEventStoreConnection eventStore, ICheckpointRepository checkpointStore)
         {
             this._bus = bus ?? throw new ArgumentNullException(nameof(bus));
             this._eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
+            this._checkpointStore = checkpointStore ?? throw new ArgumentNullException(nameof(checkpointStore));
         }
 
-        public void Start()
+        public async void Start(string module)
         {
-            //var lastCheckpoint = checkpointStore.Load("todo-checkpoint");
+            _module = module;
+            var lastCheckpoint = await _checkpointStore.GetCheckpoint(_module);
 
             _eventStore.SubscribeToAllFrom(
-                lastCheckpoint: AllCheckpoint.AllStart,
+                lastCheckpoint: lastCheckpoint != null ? new Position(lastCheckpoint.Commit, lastCheckpoint.Prepare) : AllCheckpoint.AllStart,
                 settings: CatchUpSubscriptionSettings.Default,
                 eventAppeared: EventAppeared);
         }
 
-        public Task EventAppeared(EventStoreCatchUpSubscription _, ResolvedEvent resolvedEvent)
+        public async Task EventAppeared(EventStoreCatchUpSubscription _, ResolvedEvent resolvedEvent)
         {
-            if (resolvedEvent.Event.EventStreamId.Contains("$"))
+            if (IsSystemStream(resolvedEvent.Event.EventStreamId))
             {
-                return Task.CompletedTask;
+                return;
             }
             var @event = TransformEvent(resolvedEvent);
             if (@event != null)
             {
-                this._bus.PublishAsync(@event).ConfigureAwait(false);
+                await this._bus.PublishAsync(@event);
             }
-            //checkpointStore.Save(resolvedEvent.OriginalPosition.Value);
-            return Task.CompletedTask;
+            await _checkpointStore.SaveCheckpoint(new Checkpoint
+            {
+                Module = _module,
+                Commit = resolvedEvent.OriginalPosition.Value.CommitPosition,
+                Prepare = resolvedEvent.OriginalPosition.Value.PreparePosition
+            });
+        }
+
+        private bool IsSystemStream(string linkedStream)
+        {
+            return linkedStream != null && linkedStream.StartsWith("$");
         }
 
         private static IEvent TransformEvent(ResolvedEvent @event)

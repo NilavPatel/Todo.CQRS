@@ -20,6 +20,7 @@
 - Snapshots and snapshot repository
 - Class for sequential GUIDs
 - Entity tracking for write repository and no tracking for read repository
+- Checkpoint store in SQL server for Eventstore
 
 ## Notes:
 

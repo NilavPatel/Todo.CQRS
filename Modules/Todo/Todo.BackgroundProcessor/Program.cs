@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Framework.Registrar;
-using Todo.Application.ReadModels;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Framework.Registrar;
 using Framework.BackgroundProcessor;
+using Todo.Application.ReadModels;
 
 namespace Todo.BackgroundProcessor
 {
@@ -13,7 +13,7 @@ namespace Todo.BackgroundProcessor
         {
             var serviceProvider = ConfigureServices(args);
             var backgroundProcessor = serviceProvider.GetService<IBackgroundEventProcessor>();
-            backgroundProcessor.Start();
+            backgroundProcessor.Start("Todo");
 
             System.Console.ReadLine();
         }
@@ -32,8 +32,9 @@ namespace Todo.BackgroundProcessor
             var services = new ServiceCollection();
             services.RegisterFrameworkServices();
             services.RegisterEventStore(Configuration);
-            services.RegisterCommandHandlers("Todo.Application");
             services.RegisterIntegrationEventHandlers("Todo.Application");
+            services.AddCheckpointStoreDbContext("Data Source=DESKTOP-11HQKNS\\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;");
+
             services.AddDbContext<TodoContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;"));
 
             return services.BuildServiceProvider();

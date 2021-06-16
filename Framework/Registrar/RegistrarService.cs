@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Framework.Aggregate;
 using Framework.Commands;
 using Framework.CommandBus;
@@ -11,13 +12,19 @@ using Framework.Session;
 using Framework.EventBus;
 using Framework.Snapshotting;
 using Framework.EventStore;
-using EventStore.ClientAPI;
 using Framework.BackgroundProcessor;
+using Framework.CheckpointStore;
+using EventStore.ClientAPI;
 
 namespace Framework.Registrar
 {
     public static class RegistrarService
     {
+        public static void AddCheckpointStoreDbContext(this IServiceCollection services, string connectionString)
+        {
+            services.AddDbContext<CheckpointStoreContext>(options => options.UseSqlServer(connectionString));
+        }
+
         public static void RegisterEventStore(this IServiceCollection services, IConfiguration configuration)
         {
             var eventStoreConnection = EventStoreConnection.Create(
@@ -43,6 +50,7 @@ namespace Framework.Registrar
             services.AddScoped(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
             services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
             services.AddScoped<IBackgroundEventProcessor, BackgroundEventProcessor>();
+            services.AddScoped<ICheckpointRepository, CheckpointRepository>();
         }
 
         public static void RegisterCommandHandlers(this IServiceCollection services, string assemblyName)
