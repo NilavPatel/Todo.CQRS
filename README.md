@@ -1,8 +1,8 @@
 # CQRS + ES + DDD + .NET 5.0
 
-`CQRS` stands for **Command and Query Responsibility Segregation**
-`ES` stands for **Event Sourcing**
-`DDD` stands for **Domain Driven Design**
+`CQRS` stands for **Command and Query Responsibility Segregation**  
+`ES` stands for **Event Sourcing**  
+`DDD` stands for **Domain Driven Design**  
 
 ## Features
 
