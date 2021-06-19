@@ -1,9 +1,7 @@
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using EventStore.ClientAPI;
-using Framework.Generators;
-using Newtonsoft.Json;
+using Framework.Utils;
 using Framework.Events;
 
 namespace Framework.Snapshotting
@@ -11,6 +9,7 @@ namespace Framework.Snapshotting
     public class SnapshotRepository : ISnapshotRepository
     {
         private readonly IEventStoreConnection _eventStore;
+        private string GetStreamName(Guid id) => $"Snapshot-{id}";
 
         public SnapshotRepository(IEventStoreConnection eventStore)
         {
@@ -25,7 +24,7 @@ namespace Framework.Snapshotting
             {
                 return null;
             }
-            return TransformSnapshot(page.Events[0]);
+            return Serializer.TransformSnapshot(page.Events[0].OriginalEvent.Data);
         }
 
         public async Task SaveAsync(Snapshot snapshot)
@@ -35,25 +34,10 @@ namespace Framework.Snapshotting
                 CombGuid.NewGuid(),
                 snapshot.GetType().Name,
                 true,
-                Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(snapshot, _jsonSerializerSettings)),
-                Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new EventMetadata() { FullName = snapshot.GetType().FullName }, _jsonSerializerSettings))
+                Serializer.Serialize(snapshot),
+                Serializer.Serialize(new EventMetadata() { FullName = snapshot.GetType().FullName })
             );
             await this._eventStore.AppendToStreamAsync(streamName, ExpectedVersion.Any, data);
         }
-
-        private string GetStreamName(Guid id) => $"Snapshot-{id}";
-
-        private static Snapshot TransformSnapshot(ResolvedEvent @event)
-        {
-            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(@event.OriginalEvent.Data), _jsonSerializerSettings);
-            var snap = o as Snapshot;
-            return snap;
-        }
-
-        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            NullValueHandling = NullValueHandling.Ignore
-        };
     }
 }

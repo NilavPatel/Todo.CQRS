@@ -1,6 +1,6 @@
 using System;
 
-namespace Framework.Generators
+namespace Framework.Utils
 {
     public static class CombGuid
     {

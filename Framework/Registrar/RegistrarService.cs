@@ -25,7 +25,7 @@ namespace Framework.Registrar
             services.AddDbContext<CheckpointStoreContext>(options => options.UseSqlServer(connectionString));
         }
 
-        public static void RegisterEventStore(this IServiceCollection services, IConfiguration configuration)
+        public static void AddEventStore(this IServiceCollection services, IConfiguration configuration)
         {
             var eventStoreConnection = EventStoreConnection.Create(
                 connectionString: configuration.GetValue<string>("EventStore:ConnectionString"),

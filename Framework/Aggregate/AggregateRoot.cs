@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Framework.Events;
 using Framework.Exceptions;
-using Framework.Generators;
+using Framework.Utils;
 
 namespace Framework.Aggregate
 {

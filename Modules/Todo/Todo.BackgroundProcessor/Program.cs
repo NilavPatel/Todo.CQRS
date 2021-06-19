@@ -31,7 +31,7 @@ namespace Todo.BackgroundProcessor
             // Register command handlers, event handlers
             var services = new ServiceCollection();
             services.RegisterFrameworkServices();
-            services.RegisterEventStore(Configuration);
+            services.AddEventStore(Configuration);
             services.RegisterIntegrationEventHandlers("Todo.Application");
             services.AddCheckpointStoreDbContext("Data Source=DESKTOP-11HQKNS\\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;");
 

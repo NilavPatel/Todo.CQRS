@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using Framework.Aggregate;
 using Framework.Events;
-using Newtonsoft.Json;
+using Framework.Utils;
 
 namespace Framework.EventStore
 {
@@ -25,8 +24,8 @@ namespace Framework.EventStore
                 new EventData(e.EventId,
                     e.GetType().Name,
                     true,
-                    Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(e, _jsonSerializerSettings)),
-                    Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new EventMetadata() { FullName = e.GetType().FullName }, _jsonSerializerSettings))
+                    Serializer.Serialize(e),
+                    Serializer.Serialize(new EventMetadata() { FullName = e.GetType().FullName })
                 )
             );
             await this._eventStore.AppendToStreamAsync(aggregate.Id.ToString(), aggregate.Version - 1, data);
@@ -39,20 +38,7 @@ namespace Framework.EventStore
             {
                 return null;
             }
-            return page.Events.Select(e => TransformEvent(e));
+            return page.Events.Select(e => Serializer.TransformEvent(e.OriginalEvent.Data));
         }
-
-        private static IEvent TransformEvent(ResolvedEvent @event)
-        {
-            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(@event.OriginalEvent.Data), _jsonSerializerSettings);
-            var evt = o as IEvent;
-            return evt;
-        }
-
-        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            NullValueHandling = NullValueHandling.Ignore
-        };
     }
 }

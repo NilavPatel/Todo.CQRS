@@ -1,11 +1,9 @@
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using Framework.CheckpointStore;
 using Framework.EventBus;
-using Framework.Events;
-using Newtonsoft.Json;
+using Framework.Utils;
 
 namespace Framework.BackgroundProcessor
 {
@@ -40,7 +38,7 @@ namespace Framework.BackgroundProcessor
             {
                 return;
             }
-            var @event = TransformEvent(resolvedEvent);
+            var @event = Serializer.TransformEvent(resolvedEvent.OriginalEvent.Data);
             if (@event != null)
             {
                 await this._bus.PublishAsync(@event);
@@ -57,18 +55,5 @@ namespace Framework.BackgroundProcessor
         {
             return linkedStream != null && linkedStream.StartsWith("$");
         }
-
-        private static IEvent TransformEvent(ResolvedEvent @event)
-        {
-            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(@event.OriginalEvent.Data), _jsonSerializerSettings);
-            var evt = o as IEvent;
-            return evt;
-        }
-
-        private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            NullValueHandling = NullValueHandling.Ignore
-        };
     }
 }
