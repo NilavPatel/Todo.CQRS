@@ -24,7 +24,7 @@ namespace Framework.Snapshotting
             {
                 return null;
             }
-            return Serializer.TransformSnapshot(page.Events[0].OriginalEvent.Data);
+            return Serializer.Deserialize<Snapshot>(page.Events[0].OriginalEvent.Data);
         }
 
         public async Task SaveAsync(Snapshot snapshot)

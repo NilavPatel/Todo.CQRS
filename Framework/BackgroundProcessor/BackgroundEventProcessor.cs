@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using Framework.CheckpointStore;
 using Framework.EventBus;
+using Framework.Events;
 using Framework.Utils;
 
 namespace Framework.BackgroundProcessor
@@ -38,7 +39,7 @@ namespace Framework.BackgroundProcessor
             {
                 return;
             }
-            var @event = Serializer.TransformEvent(resolvedEvent.OriginalEvent.Data);
+            var @event = Serializer.Deserialize<IEvent>(resolvedEvent.OriginalEvent.Data);
             if (@event != null)
             {
                 await this._bus.PublishAsync(@event);

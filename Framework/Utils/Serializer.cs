@@ -1,6 +1,4 @@
 using System.Text;
-using Framework.Events;
-using Framework.Snapshotting;
 using Newtonsoft.Json;
 
 namespace Framework.Utils
@@ -12,18 +10,9 @@ namespace Framework.Utils
             return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value, _jsonSerializerSettings));
         }
 
-        public static IEvent TransformEvent(byte[] data)
+        public static T Deserialize<T>(byte[] data)
         {
-            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), _jsonSerializerSettings);
-            var evt = o as IEvent;
-            return evt;
-        }
-
-        public static Snapshot TransformSnapshot(byte[] data)
-        {
-            var o = JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), _jsonSerializerSettings);
-            var snap = o as Snapshot;
-            return snap;
+            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data), _jsonSerializerSettings);
         }
 
         private static readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()

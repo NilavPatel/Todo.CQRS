@@ -38,7 +38,7 @@ namespace Framework.EventStore
             {
                 return null;
             }
-            return page.Events.Select(e => Serializer.TransformEvent(e.OriginalEvent.Data));
+            return page.Events.Select(e => Serializer.Deserialize<IEvent>(e.OriginalEvent.Data));
         }
     }
 }
