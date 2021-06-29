@@ -10,11 +10,10 @@ namespace Framework.Aggregate
     public class AggregateRoot : IAggregateRoot
     {
         private List<IEvent> _domainEvents = new List<IEvent>();
-        public IReadOnlyCollection<IEvent> DomainEvents => _domainEvents?.AsReadOnly();
+        public IReadOnlyCollection<IEvent> DomainEvents => this._domainEvents?.AsReadOnly();
 
         public Guid Id { get; protected set; }
-        // Note: Eventstore has version start with 0, so base value is set as -1, else it will be set to 0.
-        public int Version { get; protected set; } = -1;
+        public int Version { get; protected set; }
 
         public void ApplyEvent(IEvent @event)
         {
@@ -37,11 +36,11 @@ namespace Framework.Aggregate
 
         public void LoadFromHistory(IEnumerable<IEvent> history)
         {
-            lock (_domainEvents)
+            lock (this._domainEvents)
             {
                 foreach (var e in history.ToArray())
                 {
-                    if (e.Version != Version + 1)
+                    if (e.Version != this.Version + 1)
                     {
                         throw new AggregateOrEventMissingIdException(GetType(), e.GetType());
                     }
@@ -49,9 +48,9 @@ namespace Framework.Aggregate
                     {
                         throw new EventIdIncorrectException(e.SourceId, Id);
                     }
-                ((dynamic)this).When((dynamic)e);
-                    Id = e.SourceId;
-                    Version++;
+                    ((dynamic)this).When((dynamic)e);
+                    this.Id = e.SourceId;
+                    this.Version++;
                 }
             }
         }

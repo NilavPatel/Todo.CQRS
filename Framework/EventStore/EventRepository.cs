@@ -28,17 +28,19 @@ namespace Framework.EventStore
                     Serializer.Serialize(new EventMetadata() { FullName = e.GetType().FullName })
                 )
             );
-            await this._eventStore.AppendToStreamAsync(aggregate.Id.ToString(), aggregate.Version - 1, data);
+            //Todo: add -2 to version as stream current version is -1.
+            await this._eventStore.AppendToStreamAsync(aggregate.Id.ToString(), aggregate.Version - 2, data);
         }
 
         public async Task<IEnumerable<IEvent>> GetEvents(Guid aggregateId, int? startVersion = null)
         {
-            var page = await this._eventStore.ReadStreamEventsForwardAsync(aggregateId.ToString(), startVersion ?? StreamPosition.Start, 4096, false);
+            var page = await this._eventStore.ReadStreamEventsForwardAsync(aggregateId.ToString(), startVersion != null ? (startVersion.Value - 1) : StreamPosition.Start, 4096, false);
             if (page.Status == SliceReadStatus.StreamNotFound)
             {
                 return null;
             }
-            return page.Events.Select(e => Serializer.Deserialize<IEvent>(e.OriginalEvent.Data));
+            var events = page.Events.Select(e => Serializer.Deserialize<IEvent>(e.OriginalEvent.Data));
+            return events;
         }
     }
 }

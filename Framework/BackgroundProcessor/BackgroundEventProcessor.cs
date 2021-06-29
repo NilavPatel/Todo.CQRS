@@ -54,7 +54,7 @@ namespace Framework.BackgroundProcessor
 
         private bool IsSystemStream(string linkedStream)
         {
-            return linkedStream != null && linkedStream.StartsWith("$");
+            return linkedStream != null && (linkedStream.StartsWith("$") || linkedStream.StartsWith("Snapshot"));
         }
     }
 }

@@ -35,6 +35,7 @@
 - Use sequential Guids `CombGuid.NewGuid()` instead of `Guid.NewGuid()`.
 - Use `IUnitOfWork` to update data in event handlers.
 - Start background processor before starting web app
+- AggregateVersion start from 1, where in EventStore event version start from 0.
 
 ## [How to configure Eventstore?](https://github.com/NilavPatel/Todo.CQRS/blob/main/Docs/EventStore_Config.md)
 

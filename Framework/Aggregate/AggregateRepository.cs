@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using Framework.EventBus;
 using Framework.Events;
 using Framework.EventStore;
@@ -22,9 +23,9 @@ namespace Framework.Aggregate
             this._bus = bus ?? throw new ArgumentNullException(nameof(bus));
         }
 
-        public async Task<T> GetAsync<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
+        public async Task<T> GetAsync<T>(Guid aggregateId, int? expectedVersion) where T : IAggregateRoot
         {
-            return await LoadAggregate<T>(aggregateId, aggregateVersion);
+            return await LoadAggregate<T>(aggregateId, expectedVersion);
         }
 
         public async Task SaveAsync<T>(T aggregate) where T : IAggregateRoot
@@ -53,10 +54,9 @@ namespace Framework.Aggregate
         }
 
         #region private methods
-        private async Task<T> LoadAggregate<T>(Guid aggregateId, int? aggregateVersion) where T : IAggregateRoot
+        private async Task<T> LoadAggregate<T>(Guid aggregateId, int? expectedVersion) where T : IAggregateRoot
         {
-            // Note: Eventstore has version start with 0 else it will check for value greather than 1.
-            if (aggregateVersion < 0)
+            if (expectedVersion < 1)
             {
                 throw new AggregateVersionIncorrectException();
             }
@@ -66,23 +66,23 @@ namespace Framework.Aggregate
             if (snapshotVersion != -1)
             {
                 var remainingEvents = await this._eventRepository.GetEvents(aggregateId, snapshotVersion + 1);
-                if (remainingEvents != null)
+                if (remainingEvents.Any())
                 {
                     aggregate.LoadFromHistory(remainingEvents);
                 }
-                if (aggregateVersion != null && aggregate.Version != aggregateVersion)
+                if (expectedVersion != null && aggregate.Version != expectedVersion)
                 {
                     throw new ConcurrencyException(aggregateId);
                 }
                 return aggregate;
             }
             var allEvents = await this._eventRepository.GetEvents(aggregateId);
-            if (allEvents == null)
+            if (!allEvents.Any())
             {
                 throw new AggregateNotFoundException(typeof(T), aggregateId);
             }
             aggregate.LoadFromHistory(allEvents);
-            if (aggregateVersion != null && aggregate.Version != aggregateVersion)
+            if (expectedVersion != null && aggregate.Version != expectedVersion)
             {
                 throw new ConcurrencyException(aggregateId);
             }
