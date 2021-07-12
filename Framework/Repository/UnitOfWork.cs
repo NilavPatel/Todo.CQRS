@@ -26,7 +26,8 @@ namespace Framework.Repository
             {
                 return _repositories[entityType];
             }
-            var repository = (IBaseRepository<TContext, T>)this._serviceProvider.GetService(typeof(IBaseRepository<TContext, T>));
+            //TODO: Need to find a way to use dependency injection with passing existing dbcontext object
+            var repository = new BaseRepository<TContext, T>(_dbContext);
             _repositories.Add(entityType, repository);
             return repository;
         }

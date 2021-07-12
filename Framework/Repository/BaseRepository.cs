@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Framework.Repository
 {
-    public class BaseRepository<TContext, T> : ReadRepository<TContext, T>, IBaseRepository<TContext, T> where TContext : DbContext where T : BaseEntity, new()
+    public class BaseRepository<TContext, T> : ReadRepository<TContext, T>, IBaseRepository<TContext, T> where TContext : DbContext where T : BaseEntity
     {
         private readonly TContext _dbContext;
 

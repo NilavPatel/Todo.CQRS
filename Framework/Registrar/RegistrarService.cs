@@ -58,7 +58,7 @@ namespace Framework.Registrar
             var assembly = Assembly.Load(assemblyName);
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
-                         .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)));
+                            .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)));
 
             foreach (var handler in handlers)
             {
@@ -76,7 +76,7 @@ namespace Framework.Registrar
             var assembly = Assembly.Load(assemblyName);
             var handlers = assembly.GetTypes()
                          .Where(t => t.GetInterfaces()
-                         .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)));
+                            .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>)));
 
             foreach (var handler in handlers)
             {
