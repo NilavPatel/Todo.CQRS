@@ -6,7 +6,7 @@ namespace Framework.Repository
 {
     public interface IUnitOfWork<TContext> : IAsyncDisposable where TContext : DbContext
     {
-        Task SaveChangesAsync();
+        Task<int> SaveChangesAsync();
         IBaseRepository<TContext, T> Repository<T>() where T : BaseEntity;
     }
 }

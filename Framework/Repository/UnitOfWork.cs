@@ -32,9 +32,9 @@ namespace Framework.Repository
             return repository;
         }
 
-        public async Task SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            await this._dbContext.SaveChangesAsync();
+            return await this._dbContext.SaveChangesAsync();
         }
 
         public async ValueTask DisposeAsync()
