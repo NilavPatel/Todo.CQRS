@@ -11,11 +11,17 @@ namespace Todo.BackgroundProcessor
     {
         static void Main(string[] args)
         {
+            System.Console.WriteLine("Background App start");
+
             var serviceProvider = ConfigureServices(args);
             var backgroundProcessor = serviceProvider.GetService<IBackgroundEventProcessor>();
             backgroundProcessor.Start("Todo");
 
+            System.Console.WriteLine("Press enter to stop");
+
             System.Console.ReadLine();
+
+            System.Console.WriteLine("Background App end");
         }
 
         private static ServiceProvider ConfigureServices(string[] args)

@@ -5,7 +5,7 @@ namespace Framework.CheckpointStore
     public class Checkpoint
     {
         [Key]
-        public string Module { get; set; }
+        public string SubscriptionId { get; set; }
         public long Commit { get; set; }
         public long Prepare { get; set; }
     }

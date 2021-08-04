@@ -13,7 +13,7 @@ namespace Framework.BackgroundProcessor
         private readonly IIntegrationEventBus _bus;
         private readonly IEventStoreConnection _eventStore;
         private readonly ICheckpointRepository _checkpointStore;
-        private string _module;
+        private string _subscriptionId;
 
         public BackgroundEventProcessor(IIntegrationEventBus bus, IEventStoreConnection eventStore, ICheckpointRepository checkpointStore)
         {
@@ -22,10 +22,10 @@ namespace Framework.BackgroundProcessor
             this._checkpointStore = checkpointStore ?? throw new ArgumentNullException(nameof(checkpointStore));
         }
 
-        public async void Start(string module)
+        public async void Start(string subscriptionId)
         {
-            _module = module;
-            var lastCheckpoint = await _checkpointStore.GetCheckpoint(_module);
+            this._subscriptionId = subscriptionId;
+            var lastCheckpoint = await _checkpointStore.GetCheckpoint(this._subscriptionId);
 
             _eventStore.SubscribeToAllFrom(
                 lastCheckpoint: lastCheckpoint != null ? new Position(lastCheckpoint.Commit, lastCheckpoint.Prepare) : AllCheckpoint.AllStart,
@@ -46,7 +46,7 @@ namespace Framework.BackgroundProcessor
             }
             await _checkpointStore.SaveCheckpoint(new Checkpoint
             {
-                Module = _module,
+                SubscriptionId = this._subscriptionId,
                 Commit = resolvedEvent.OriginalPosition.Value.CommitPosition,
                 Prepare = resolvedEvent.OriginalPosition.Value.PreparePosition
             });

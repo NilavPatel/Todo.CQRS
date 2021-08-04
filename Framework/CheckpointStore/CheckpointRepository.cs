@@ -13,14 +13,14 @@ namespace Framework.CheckpointStore
             this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<Checkpoint> GetCheckpoint(string key)
+        public async Task<Checkpoint> GetCheckpoint(string subscriptionId)
         {
-            return await _dbContext.Set<Checkpoint>().FirstOrDefaultAsync();
+            return await _dbContext.Set<Checkpoint>().FirstOrDefaultAsync(x => x.SubscriptionId == subscriptionId);
         }
 
         public async Task SaveCheckpoint(Checkpoint checkpoint)
         {
-            var oldCheckpoint = await _dbContext.Set<Checkpoint>().Where(x => x.Module == checkpoint.Module).FirstOrDefaultAsync();
+            var oldCheckpoint = await _dbContext.Set<Checkpoint>().FirstOrDefaultAsync(x => x.SubscriptionId == checkpoint.SubscriptionId);
             if (oldCheckpoint != null)
             {
                 oldCheckpoint.Commit = checkpoint.Commit;
