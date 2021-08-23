@@ -20,13 +20,6 @@ namespace Framework.Registrar
 {
     public static class RegistrarService
     {
-        public static void AddCheckpointStoreDbContext(this IServiceCollection services, string connectionString)
-        {
-            services.AddDbContext<CheckpointStoreContext>(options => options.UseSqlServer(connectionString));
-            services.AddScoped<IBackgroundEventProcessor, BackgroundEventProcessor>();
-            services.AddScoped<ICheckpointRepository, CheckpointRepository>();
-        }
-
         public static void AddEventStore(this IServiceCollection services, IConfiguration configuration)
         {
             var eventStoreConnection = EventStoreConnection.Create(
@@ -51,6 +44,8 @@ namespace Framework.Registrar
             services.AddScoped(typeof(IBaseRepository<,>), typeof(BaseRepository<,>));
             services.AddScoped(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
             services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+            services.AddScoped<IBackgroundEventProcessor, BackgroundEventProcessor>();
+            services.AddScoped<ICheckpointRepository, CheckpointRepository>();
         }
 
         public static void RegisterCommandHandlers(this IServiceCollection services, string assemblyName)

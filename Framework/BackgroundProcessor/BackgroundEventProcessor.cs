@@ -25,10 +25,10 @@ namespace Framework.BackgroundProcessor
         public async void Start(string subscriptionId)
         {
             this._subscriptionId = subscriptionId;
-            var lastCheckpoint = await _checkpointStore.GetCheckpoint(this._subscriptionId);
+            var lastCheckpoint = await this._checkpointStore.GetCheckpoint(this._subscriptionId);
 
-            _eventStore.SubscribeToAllFrom(
-                lastCheckpoint: lastCheckpoint != null ? new Position(lastCheckpoint.Commit, lastCheckpoint.Prepare) : AllCheckpoint.AllStart,
+            this._eventStore.SubscribeToAllFrom(
+                lastCheckpoint: lastCheckpoint != null ? new Position(lastCheckpoint.Value, lastCheckpoint.Value) : AllCheckpoint.AllStart,
                 settings: CatchUpSubscriptionSettings.Default,
                 eventAppeared: EventAppeared);
         }
@@ -44,12 +44,7 @@ namespace Framework.BackgroundProcessor
             {
                 await this._bus.PublishAsync(@event);
             }
-            await _checkpointStore.SaveCheckpoint(new Checkpoint
-            {
-                SubscriptionId = this._subscriptionId,
-                Commit = resolvedEvent.OriginalPosition.Value.CommitPosition,
-                Prepare = resolvedEvent.OriginalPosition.Value.PreparePosition
-            });
+            await this._checkpointStore.SaveCheckpoint(this._subscriptionId, resolvedEvent.OriginalPosition.Value.CommitPosition);
         }
 
         private bool IsSystemStream(string linkedStream)

@@ -4,7 +4,7 @@ namespace Framework.CheckpointStore
 {
     public interface ICheckpointRepository
     {
-        Task<Checkpoint> GetCheckpoint(string subscriptionId);
-        Task SaveCheckpoint(Checkpoint checkpoint);
+        Task<long?> GetCheckpoint(string subscriptionId);
+        Task SaveCheckpoint(string subscriptionId, long position);
     }
 }

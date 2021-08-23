@@ -9,7 +9,6 @@ namespace Framework.Snapshotting
     public class SnapshotRepository : ISnapshotRepository
     {
         private readonly IEventStoreConnection _eventStore;
-        private string GetStreamName(Guid id) => $"Snapshot-{id}";
 
         public SnapshotRepository(IEventStoreConnection eventStore)
         {
@@ -18,7 +17,7 @@ namespace Framework.Snapshotting
 
         public async Task<Snapshot> GetAsync(Guid aggregateId)
         {
-            var snapshotStreamName = GetStreamName(aggregateId);
+            var snapshotStreamName = GetSnapshotStreamName(aggregateId);
             var page = await this._eventStore.ReadStreamEventsBackwardAsync(snapshotStreamName, StreamPosition.End, 1, false);
             if (page.Status == SliceReadStatus.StreamNotFound)
             {
@@ -29,7 +28,7 @@ namespace Framework.Snapshotting
 
         public async Task SaveAsync(Snapshot snapshot)
         {
-            var streamName = GetStreamName(snapshot.Id);
+            var streamName = GetSnapshotStreamName(snapshot.Id);
             var data = new EventData(
                 CombGuid.NewGuid(),
                 snapshot.GetType().Name,
@@ -39,5 +38,7 @@ namespace Framework.Snapshotting
             );
             await this._eventStore.AppendToStreamAsync(streamName, ExpectedVersion.Any, data);
         }
+
+        private static string GetSnapshotStreamName(Guid subscriptionId) => $"snapshot_{subscriptionId}";
     }
 }

@@ -1,38 +1,48 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EventStore.ClientAPI;
+using Framework.Events;
+using Framework.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace Framework.CheckpointStore
 {
     public class CheckpointRepository : ICheckpointRepository
     {
-        private readonly CheckpointStoreContext _dbContext;
-        public CheckpointRepository(CheckpointStoreContext dbContext)
+        private readonly IEventStoreConnection _eventStore;
+
+        public CheckpointRepository(IEventStoreConnection eventStore)
         {
-            this._dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            this._eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
         }
 
-        public async Task<Checkpoint> GetCheckpoint(string subscriptionId)
+        public async Task<long?> GetCheckpoint(string subscriptionId)
         {
-            return await _dbContext.Set<Checkpoint>().FirstOrDefaultAsync(x => x.SubscriptionId == subscriptionId);
-        }
+            var streamName = GetCheckpointStreamName(subscriptionId);
 
-        public async Task SaveCheckpoint(Checkpoint checkpoint)
-        {
-            var oldCheckpoint = await _dbContext.Set<Checkpoint>().FirstOrDefaultAsync(x => x.SubscriptionId == checkpoint.SubscriptionId);
-            if (oldCheckpoint != null)
+            var page = await this._eventStore.ReadStreamEventsBackwardAsync(streamName, StreamPosition.End, 1, false);
+            if (page.Status == SliceReadStatus.StreamNotFound)
             {
-                oldCheckpoint.Commit = checkpoint.Commit;
-                oldCheckpoint.Prepare = checkpoint.Prepare;
-                this._dbContext.Set<Checkpoint>().Update(oldCheckpoint);
+                return null;
             }
-            else
-            {
-                await this._dbContext.Set<Checkpoint>().AddAsync(checkpoint);
-            }
-
-            await this._dbContext.SaveChangesAsync();
+            return Serializer.Deserialize<Checkpoint>(page.Events[0].OriginalEvent.Data).Position;
         }
+
+        public async Task SaveCheckpoint(string subscriptionId, long position)
+        {
+            var checkpoint = new Checkpoint() { SubscriptionId = subscriptionId, Position = position };
+            var streamName = GetCheckpointStreamName(subscriptionId);
+            var data = new EventData(
+                CombGuid.NewGuid(),
+                checkpoint.GetType().Name,
+                true,
+                Serializer.Serialize(checkpoint),
+                Serializer.Serialize(new EventMetadata() { FullName = checkpoint.GetType().FullName })
+            );
+            await this._eventStore.AppendToStreamAsync(streamName, ExpectedVersion.Any, data);
+        }
+
+        private static string GetCheckpointStreamName(string subscriptionId) => $"checkpoint_{subscriptionId}";
     }
 }

@@ -39,7 +39,6 @@ namespace Todo.BackgroundProcessor
             services.RegisterFrameworkServices();
             services.AddEventStore(Configuration);
             services.RegisterIntegrationEventHandlers("Todo.Application");
-            services.AddCheckpointStoreDbContext("Data Source=DESKTOP-11HQKNS\\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;");
 
             services.AddDbContext<TodoContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-11HQKNS\SQLExpress;Initial Catalog=Todo;User Id=sa;Password=satest12@;"));
 

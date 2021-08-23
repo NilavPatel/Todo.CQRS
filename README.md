@@ -17,10 +17,10 @@
 - Unit of work, Read repository, Write repository
 - Auto registration of commands, events and their handlers
 - Unit of work for multiple aggregates
-- Snapshots and snapshot repository
+- Snapshots, Snapshot repository, Snapshot storage in eventstore db
+- Checkpoint, Checkpoint repository, Checkpoint storage in eventstore db
 - Class for sequential GUIDs
 - Entity tracking for write repository and no tracking for read repository
-- Checkpoint store in SQL server for Eventstore
 
 ## Notes:
 
