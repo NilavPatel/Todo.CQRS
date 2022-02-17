@@ -10,7 +10,6 @@ namespace Framework.Repository
         private TContext _dbContext;
         private readonly IServiceProvider _serviceProvider;
         private IDictionary<Type, dynamic> _repositories;
-        private bool _disposed = false;
 
         public UnitOfWork(TContext dbContext, IServiceProvider serviceProvider)
         {
@@ -26,24 +25,17 @@ namespace Framework.Repository
             {
                 return _repositories[entityType];
             }
-            //TODO: Need to find a way to use dependency injection with passing existing dbcontext object
-            var repository = new BaseRepository<TContext, T>(_dbContext);
+
+            var repositoryType = typeof(BaseRepository<,>);
+            var repository = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(T)), _dbContext);
+
             _repositories.Add(entityType, repository);
-            return repository;
+            return (IBaseRepository<TContext, T>)repository;
         }
 
         public async Task<int> SaveChangesAsync()
         {
             return await this._dbContext.SaveChangesAsync();
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            if (!this._disposed)
-            {
-                await this._dbContext.DisposeAsync();
-                this._disposed = true;
-            }
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Framework.Repository
 {
-    public interface IUnitOfWork<TContext> : IAsyncDisposable where TContext : DbContext
+    public interface IUnitOfWork<TContext> where TContext : DbContext
     {
         Task<int> SaveChangesAsync();
         IBaseRepository<TContext, T> Repository<T>() where T : BaseEntity;

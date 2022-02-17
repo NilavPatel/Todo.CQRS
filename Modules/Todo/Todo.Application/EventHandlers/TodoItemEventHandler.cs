@@ -21,55 +21,43 @@ namespace Todo.Application.EventHanders
 
         public async Task HandleAsync(TodoItemCreated @event)
         {
-            await using (this._unitOfWork)
+            var todoItem = new TodoItem
             {
-                var todoItem = new TodoItem
-                {
-                    Id = @event.SourceId,
-                    Version = @event.Version,
-                    Title = @event.Title,
-                    IsComplete = @event.IsComplete
-                };
+                Id = @event.SourceId,
+                Version = @event.Version,
+                Title = @event.Title,
+                IsComplete = @event.IsComplete
+            };
 
-                await this._unitOfWork.Repository<TodoItem>().AddAsync(todoItem);
-                await this._unitOfWork.SaveChangesAsync();
-            }
+            await this._unitOfWork.Repository<TodoItem>().AddAsync(todoItem);
+            await this._unitOfWork.SaveChangesAsync();
         }
 
         public async Task HandleAsync(TodoItemMarkedAsComplete @event)
         {
-            await using (this._unitOfWork)
-            {
-                var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
-                todoItem.IsComplete = true;
-                todoItem.Version = @event.Version;
-                this._unitOfWork.Repository<TodoItem>().Update(todoItem);
-                await this._unitOfWork.SaveChangesAsync();
-            }
+            var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
+            todoItem.IsComplete = true;
+            todoItem.Version = @event.Version;
+            this._unitOfWork.Repository<TodoItem>().Update(todoItem);
+            await this._unitOfWork.SaveChangesAsync();
         }
 
         public async Task HandleAsync(TodoItemMarkedAsUnComplete @event)
         {
-            await using (this._unitOfWork)
-            {
-                var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
-                todoItem.IsComplete = false;
-                todoItem.Version = @event.Version;
-                this._unitOfWork.Repository<TodoItem>().Update(todoItem);
-                await this._unitOfWork.SaveChangesAsync();
-            }
+            var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
+            todoItem.IsComplete = false;
+            todoItem.Version = @event.Version;
+            this._unitOfWork.Repository<TodoItem>().Update(todoItem);
+            await this._unitOfWork.SaveChangesAsync();
         }
 
         public async Task HandleAsync(TodoItemTitleUpdated @event)
         {
-            await using (this._unitOfWork)
-            {
-                var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
-                todoItem.Title = @event.Title;
-                todoItem.Version = @event.Version;
-                this._unitOfWork.Repository<TodoItem>().Update(todoItem);
-                await this._unitOfWork.SaveChangesAsync();
-            }
+            var todoItem = await this._unitOfWork.Repository<TodoItem>().GetByIdAsync(@event.SourceId);
+            todoItem.Title = @event.Title;
+            todoItem.Version = @event.Version;
+            this._unitOfWork.Repository<TodoItem>().Update(todoItem);
+            await this._unitOfWork.SaveChangesAsync();
         }
     }
 }
